@@ -8,3 +8,4 @@ entitys.txt
 *.test
 *.out
 go.work
+.idea
