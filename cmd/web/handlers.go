@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"time"
 )
@@ -9,6 +10,15 @@ import (
 func myHandler(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintf(w, "Serving: %s\n", r.URL.Path)
 	fmt.Printf("Served: %s\n", r.Host)
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request){
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"home.gohtml", url + "index.gohtml"))
+	if r.Method != http.MethodPost {
+		_ = tmpl.ExecuteTemplate(w, "base", nil)
+		return
+	}
 }
 
 func timeHandler(w http.ResponseWriter, r *http.Request) {

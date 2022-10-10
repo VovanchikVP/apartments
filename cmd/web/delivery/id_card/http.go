@@ -5,9 +5,11 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type IDCardHandler struct {
@@ -24,6 +26,8 @@ func (a IDCardHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		a.get(w, r)
 	case http.MethodPost:
 		a.create(w, r)
+	case http.MethodDelete:
+		a.delete(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -48,22 +52,19 @@ func (a IDCardHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, _ := json.Marshal(resp)
-	_, _ = w.Write(body)
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"id_card.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body []entities.IDCard
+	}{Body: resp})
+	return
 }
 
 func (a IDCardHandler) create(w http.ResponseWriter, r *http.Request) {
 	var idCard entities.IDCard
-
-	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &idCard)
-	if err != nil {
-		fmt.Println(string(body))
-		_, _ = w.Write([]byte("Ошибка в запросе"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
+	idCard.Type = r.FormValue("Type")
+	idCard.Number = r.FormValue("Number")
+	idCard.Issued = r.FormValue("Issued")
 	resp, err := a.datastore.Create(idCard)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при создании записи."))
@@ -71,6 +72,32 @@ func (a IDCardHandler) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	body, _ := json.Marshal(resp)
+	_, _ = w.Write(body)
+}
+
+func (a IDCardHandler) delete(w http.ResponseWriter, r *http.Request) {
+	var idCard entities.IDCard
+	body, _ := ioutil.ReadAll(r.Body)
+	data := strings.Split(string(body), "&")
+	for i:=0; i<len(data); i++ {
+		d := strings.Split(data[i], "=")
+		if d[0] == "id_card_id"{
+			id, err := strconv.Atoi(d[1])
+			if err != nil {
+				_, _ = w.Write([]byte("Не верный формат ID"))
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			idCard.ID = id
+		}
+	}
+	resp, err := a.datastore.Delete(idCard)
+	if err != nil {
+		_, _ = w.Write([]byte("Ошибка при удалении записи."))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	body, _ = json.Marshal(resp)
 	_, _ = w.Write(body)
 }

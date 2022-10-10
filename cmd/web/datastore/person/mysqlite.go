@@ -17,6 +17,32 @@ func New(db *sql.DB) PersonStorer {
 	return PersonStorer{db: db}
 }
 
+func (a PersonStorer) GetByID(id int) (person entities.Person, err error){
+	var row *sql.Row
+
+	row = a.db.QueryRow("SELECT ROWID, * FROM persons WHERE ROWID = ?", id)
+
+	db, err := driver.ConnectToMySQL()
+	if err != nil {
+		log.Println("could not connect to sql, err:", err)
+		return entities.Person{}, err
+	}
+
+	idCardDB := id_card.New(db)
+	addressDB := address.New(db)
+
+	switch err = row.Scan(&person.ID, &person.LastName, &person.FirstName, &person.Patronymic, &person.IDCard.ID, &person.Phone, &person.Address.ID); err {
+	case sql.ErrNoRows:
+		return entities.Person{}, err
+	case nil:
+		person.IDCard, _ = idCardDB.GetByID(person.IDCard.ID)
+		person.Address, _ = addressDB.GetByID(person.Address.ID)
+		return person, nil
+	default:
+		return entities.Person{}, err
+	}
+}
+
 func (a PersonStorer) Get(id int) ([]entities.Person, error) {
 	var rows *sql.Rows
 	var err error

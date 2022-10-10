@@ -1,0 +1,17 @@
+td.tools i{
+    padding: 2px;
+    cursor: pointer;
+}
+
+td.tools i:hover{
+    color: red;
+}
+
+table thead th{
+    text-align: center;
+    border-bottom: black 1px solid;
+}
+
+table tr td {
+    border-bottom: black 1px solid;
+}

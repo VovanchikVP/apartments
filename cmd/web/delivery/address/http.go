@@ -5,9 +5,11 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type AddressHandler struct {
@@ -24,6 +26,9 @@ func (a AddressHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		a.get(w, r)
 	case http.MethodPost:
 		a.create(w, r)
+	case http.MethodDelete:
+		a.delete(w, r)
+
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -48,22 +53,27 @@ func (a AddressHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, _ := json.Marshal(resp)
-	_, _ = w.Write(body)
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"address.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body []entities.Address
+	}{Body: resp})
+	return
 }
 
 func (a AddressHandler) create(w http.ResponseWriter, r *http.Request) {
 	var address entities.Address
-
-	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &address)
+	index, err := strconv.Atoi(r.FormValue("Index"))
 	if err != nil {
-		fmt.Println(string(body))
-		_, _ = w.Write([]byte("Ошибка в запросе"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		fmt.Println("Неверный формат индекса.")
+		index = 0
 	}
 
+	address.Index = index
+	address.City = r.FormValue("City")
+	address.Street = r.FormValue("Street")
+	address.House = r.FormValue("House")
+	address.Apartment = r.FormValue("Apartment")
 	resp, err := a.datastore.Create(address)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при создании записи."))
@@ -71,6 +81,32 @@ func (a AddressHandler) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	body, _ := json.Marshal(resp)
+	_, _ = w.Write(body)
+}
+
+func (a AddressHandler) delete(w http.ResponseWriter, r *http.Request) {
+	var address entities.Address
+	body, _ := ioutil.ReadAll(r.Body)
+	data := strings.Split(string(body), "&")
+	for i:=0; i<len(data); i++ {
+		d := strings.Split(data[i], "=")
+		if d[0] == "address_id"{
+			id, err := strconv.Atoi(d[1])
+			if err != nil {
+				_, _ = w.Write([]byte("Не верный формат ID"))
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			address.ID = id
+		}
+	}
+	resp, err := a.datastore.Delete(address)
+	if err != nil {
+		_, _ = w.Write([]byte("Ошибка при удалении записи."))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	body, _ = json.Marshal(resp)
 	_, _ = w.Write(body)
 }

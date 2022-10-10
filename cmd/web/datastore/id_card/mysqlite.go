@@ -3,6 +3,7 @@ package id_card
 import (
 	"apartments/cmd/web/entities"
 	"database/sql"
+	"strings"
 )
 
 type IDCardStorer struct {
@@ -52,6 +53,7 @@ func (a IDCardStorer) Get(id int) ([]entities.IDCard, error) {
 	for rows.Next() {
 		var a entities.IDCard
 		_ = rows.Scan(&a.ID, &a.Type, &a.Number, &a.Issued)
+		a.Issued = strings.Split(a.Issued, "T")[0]
 		idCard = append(idCard, a)
 	}
 
@@ -70,4 +72,12 @@ func (a IDCardStorer) Create(idCard entities.IDCard) (entities.IDCard, error) {
 	idCard.ID = int(id)
 
 	return idCard, nil
+}
+
+func (a IDCardStorer) Delete(idCard entities.IDCard) (bool, error)  {
+	_, err := a.db.Exec("DELETE FROM id_cards WHERE ROWID = ?", idCard.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

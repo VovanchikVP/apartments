@@ -5,9 +5,11 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type PropertyHandler struct {
@@ -24,6 +26,8 @@ func (a PropertyHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		a.get(w, r)
 	case http.MethodPost:
 		a.create(w, r)
+	case http.MethodDelete:
+		a.delete(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -48,21 +52,20 @@ func (a PropertyHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, _ := json.Marshal(resp)
-	_, _ = w.Write(body)
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"property_document.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body []entities.PropertyDocuments
+	}{Body: resp})
+	return
 }
 
 func (a PropertyHandler) create(w http.ResponseWriter, r *http.Request) {
 	var propertyDocument entities.PropertyDocuments
 
-	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &propertyDocument)
-	if err != nil {
-		fmt.Println(string(body))
-		_, _ = w.Write([]byte("Ошибка в запросе"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	propertyDocument.Type = r.FormValue("Type")
+	propertyDocument.Number = r.FormValue("Number")
+	propertyDocument.Date = r.FormValue("Date")
 
 	resp, err := a.datastore.Create(propertyDocument)
 	if err != nil {
@@ -71,6 +74,32 @@ func (a PropertyHandler) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	body, _ := json.Marshal(resp)
+	_, _ = w.Write(body)
+}
+
+func (a PropertyHandler) delete(w http.ResponseWriter, r *http.Request) {
+	var propertyDocument entities.PropertyDocuments
+	body, _ := ioutil.ReadAll(r.Body)
+	data := strings.Split(string(body), "&")
+	for i:=0; i<len(data); i++ {
+		d := strings.Split(data[i], "=")
+		if d[0] == "property_document_id"{
+			id, err := strconv.Atoi(d[1])
+			if err != nil {
+				_, _ = w.Write([]byte("Не верный формат ID"))
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			propertyDocument.ID = id
+		}
+	}
+	resp, err := a.datastore.Delete(propertyDocument)
+	if err != nil {
+		_, _ = w.Write([]byte("Ошибка при удалении записи."))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	body, _ = json.Marshal(resp)
 	_, _ = w.Write(body)
 }

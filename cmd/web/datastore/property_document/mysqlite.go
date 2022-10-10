@@ -71,3 +71,12 @@ func (a PropertyDocumentStorer) Create(propertyDocuments entities.PropertyDocume
 
 	return propertyDocuments, nil
 }
+
+func (a PropertyDocumentStorer) Delete(propertyDocument entities.PropertyDocuments) (bool, error)  {
+	_, err := a.db.Exec("DELETE FROM property_documents WHERE ROWID = ?", propertyDocument.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+

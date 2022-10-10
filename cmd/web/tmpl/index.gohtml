@@ -1,0 +1,21 @@
+{{define "base"}}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Контроль аренды!</title>
+        <link rel="stylesheet" href="/static/css/css.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/227acb4cd8.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <a href="/" style="margin-right: 20px;">Главная</a>
+        <a href="/type_payments?id=0" style="margin-right: 20px;">Типы платежей.</a>
+        <a href="/id_cards?id=0" style="margin-right: 20px;">Список удостоверений</a>
+        <a href="/address?id=0" style="margin-right: 20px;">Список адресов</a>
+        <a href="/property_document?id=0" style="margin-right: 20px;">Документы о собственности</a>
+        {{template "body" .}}
+        <script src="/static/js/js.js"></script>
+    </body>
+</html>
+{{end}}

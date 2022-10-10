@@ -1,0 +1,35 @@
+{{define "body"}}
+<h2>Список документов удостоверяющих личность!</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Тип</th>
+                <th>Номер</th>
+                <th>Дата выдачи</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="id_card-row">
+                <td>{{.ID}}</td>
+                <td>{{.Type}}</td>
+                <td>{{.Number}}</td>
+                <td>{{.Issued}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <hr/>
+    <form id="id_form-id_card" method="post">
+        <label for="id_type">Тип документа: </label>
+        <input type="text" id="id_type" name="Type" autocomplete="off"><br/>
+        <label for="id_number">Номер документа: </label>
+        <input type="text" id="id_number" name="Number" autocomplete="off"><br/>
+        <label for="id_issued">Дата выдачи: </label>
+        <input type="date" id="id_issued" name="Issued" autocomplete="off"><br/>
+        <input type="submit" value="Добавить документ">
+    </form>
+{{end}}

@@ -5,9 +5,11 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type TypePymentHandler struct {
@@ -24,6 +26,8 @@ func (a TypePymentHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		a.get(w, r)
 	case http.MethodPost:
 		a.create(w, r)
+	case http.MethodDelete:
+		a.delete(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -33,7 +37,6 @@ func (a TypePymentHandler) get(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	i, err := strconv.Atoi(id)
-	fmt.Println(i)
 	if err != nil {
 		_, _ = w.Write([]byte("Не верный формат ID"))
 		w.WriteHeader(http.StatusBadRequest)
@@ -48,29 +51,50 @@ func (a TypePymentHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, _ := json.Marshal(resp)
-	_, _ = w.Write(body)
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"type_payment.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body []entities.TypePayment
+	}{Body: resp})
+	return
 }
 
 func (a TypePymentHandler) create(w http.ResponseWriter, r *http.Request) {
-	var typePyment entities.TypePayment
-
-	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &typePyment)
-	if err != nil {
-		fmt.Println(string(body))
-		_, _ = w.Write([]byte("Ошибка в запросе"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	typePayment := entities.TypePayment{
+		Name: r.FormValue("Name"),
 	}
-
-	resp, err := a.datastore.Create(typePyment)
+	resp, err := a.datastore.Create(typePayment)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при создании записи."))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	body, _ := json.Marshal(resp)
+	_, _ = w.Write(body)
+}
 
+func (a TypePymentHandler) delete(w http.ResponseWriter, r *http.Request) {
+	var typePayment entities.TypePayment
+	body, _ := ioutil.ReadAll(r.Body)
+	data := strings.Split(string(body), "&")
+	for i:=0; i<len(data); i++ {
+		d := strings.Split(data[i], "=")
+		if d[0] == "type_payment_id"{
+			id, err := strconv.Atoi(d[1])
+			if err != nil {
+				_, _ = w.Write([]byte("Не верный формат ID"))
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			typePayment.ID = id
+		}
+	}
+	resp, err := a.datastore.Delete(typePayment)
+	if err != nil {
+		_, _ = w.Write([]byte("Ошибка при удалении записи."))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	body, _ = json.Marshal(resp)
 	_, _ = w.Write(body)
 }

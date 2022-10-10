@@ -1,0 +1,46 @@
+{{define "body"}}
+<h2>Список адресов!</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Адрес</th>
+                <th>Количество комнат</th>
+                <th>Документ о собственности</th>
+                <th>В аренде</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="apartments-row">
+                <td>{{.ID}}</td>
+                <td>{{.Address.City}} {{.Address.Street}} {{.Address.House}}-{{.Address.Apartment}}</td>
+                <td>{{.CountRooms}}</td>
+                <td>{{.PropertyDocuments.Number}}</td>
+                <td>{{if .Rent}}+{{else}}-{{end}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <form id="id_form-apartment" method="post">
+        <label for="id_address">Адрес: </label>
+        <select id="id_address" name="Address">
+            {{range .Form.Address}}
+                <option value="{{.ID}}">{{.Address.City}} {{.Address.Street}} {{.Address.House}}-{{.Address.Apartment}}</option>
+            {{end}}
+        </select>
+        <label for="id_count_rooms">Количество комнат: </label>
+        <input type="number" id="id_count_rooms" name="CountRooms" autocomplete="off"><br/>
+        <label for="id_property_document">Документ о собственности: </label>
+        <select id="id_property_document" name="PropertyDocument">
+            {{range .Form.PropertyDocuments}}
+                <option value="{{.ID}}">{{.Number}}</option>
+            {{end}}
+        </select>
+        <label for="id_rent">Аренда: </label>
+        <input type="checkbox" id="id_rent" name="Rent"><br/>
+        <input type="submit" value="Добавить документ">
+    </form>
+{{end}}

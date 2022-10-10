@@ -1,12 +1,12 @@
 package entities
-//++
+
 type Animal struct {
 	ID   int
 	Name string
 	Age  int
 }
 
-//++
+
 type Counter struct {
 	// Счетчик
 	ID               int
@@ -16,7 +16,7 @@ type Counter struct {
 	Apartment        Apartment
 }
 
-//++
+
 type Indication struct {
 	// Показание
 	ID      int
@@ -25,7 +25,7 @@ type Indication struct {
 	Data    float32
 }
 
-//++
+
 type Tariff struct {
 	// Тариф
 	ID      int
@@ -50,7 +50,7 @@ type IDCard struct {
 	Issued string
 }
 
-//++
+
 type Person struct {
 	// Человек
 	ID         int
@@ -82,7 +82,7 @@ type PropertyDocuments struct {
 	Date   string
 }
 
-//++
+//
 type Apartment struct {
 	// Квартира
 	ID                int
@@ -91,6 +91,7 @@ type Apartment struct {
 	PropertyDocuments PropertyDocuments
 	Rent              bool
 }
+
 
 type ContractRent struct {
 	// Договор аренды
@@ -117,11 +118,13 @@ type ContractRent struct {
 	FileContract          string
 }
 
+
 type Tenant struct {
 	ID           int
 	ContractRent ContractRent
 	Person       Person
 }
+
 
 type Payment struct {
 	ID        int

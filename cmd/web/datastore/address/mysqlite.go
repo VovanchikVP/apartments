@@ -71,3 +71,12 @@ func (a AddressStorer) Create(address entities.Address) (entities.Address, error
 
 	return address, nil
 }
+
+func (a AddressStorer) Delete(address entities.Address) (bool, error)  {
+	_, err := a.db.Exec("DELETE FROM address WHERE ROWID = ?", address.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+

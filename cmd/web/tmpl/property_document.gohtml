@@ -1,0 +1,34 @@
+{{define "body"}}
+<h2>Список документов о собственности!</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Тип</th>
+                <th>Номер</th>
+                <th>Дата</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="property_document-row">
+                <td>{{.ID}}</td>
+                <td>{{.Type}}</td>
+                <td>{{.Number}}</td>
+                <td>{{.Date}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <form id="id_form-property_document" method="post">
+        <label for="id_type">Тип: </label>
+        <input type="text" id="id_type" name="Type" autocomplete="off"><br/>
+        <label for="id_number">Номер: </label>
+        <input type="text" id="id_number" name="Number" autocomplete="off"><br/>
+        <label for="id_date">Дата: </label>
+        <input type="date" id="id_date" name="Date" autocomplete="off"><br/>
+        <input type="submit" value="Добавить документ">
+    </form>
+{{end}}
