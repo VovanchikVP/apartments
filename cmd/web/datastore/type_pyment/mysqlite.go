@@ -3,6 +3,7 @@ package type_pyment
 import (
 	"apartments/cmd/web/entities"
 	"database/sql"
+	"fmt"
 )
 
 type TypePymentStorer struct {
@@ -13,7 +14,7 @@ func New(db *sql.DB) TypePymentStorer {
 	return TypePymentStorer{db: db}
 }
 
-func (a TypePymentStorer) GetByID(id int) (payment entities.TypePayment, err error){
+func (a TypePymentStorer) GetByID(id int) (payment entities.TypePayment, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM type_pyments WHERE ROWID = ?", id)
@@ -60,8 +61,9 @@ func (a TypePymentStorer) Get(id int) ([]entities.TypePayment, error) {
 
 func (a TypePymentStorer) Create(typePyment entities.TypePayment) (entities.TypePayment, error) {
 
+	fmt.Print("1222")
 	res, err := a.db.Exec("INSERT INTO type_pyments(name) VALUES (?)", typePyment.Name)
-
+	fmt.Print(res)
 	if err != nil {
 		return entities.TypePayment{}, err
 	}
@@ -72,7 +74,7 @@ func (a TypePymentStorer) Create(typePyment entities.TypePayment) (entities.Type
 	return typePyment, nil
 }
 
-func (a TypePymentStorer) Delete(typePayment entities.TypePayment) (bool, error)  {
+func (a TypePymentStorer) Delete(typePayment entities.TypePayment) (bool, error) {
 	_, err := a.db.Exec("DELETE FROM type_pyments WHERE ROWID = ?", typePayment.ID)
 	if err != nil {
 		return false, err

@@ -11,6 +11,5 @@ func ConnectToMySQL() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return db, nil
 }

@@ -63,6 +63,35 @@ $(function () {
         let data = {'property_document_id': id_row}
         rest_ajax('delete', data, url);
     });
+    // Отправка формы добавления вида операции.
+    body.on('submit', '#id_form-operation_groups', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        let url = '/operation_groups';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.operation_groups-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/operation_groups';
+        let data = {'operation_groups_id': id_row}
+        rest_ajax('delete', data, url);
+    });
+    // Отправка формы добавления операции.
+    body.on('submit', '#id_form-operation', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        console.log(data_form)
+        let url = '/operation';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.operation-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/operation';
+        let data = {'operation_groups_id': id_row}
+        rest_ajax('delete', data, url);
+    });
 });
 
 function rest_ajax(method, data, url) {

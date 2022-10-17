@@ -4,8 +4,8 @@ name varchar(50),
 age int,
 PRIMARY KEY(id));
 
-INSERT INTO animals VALUES(1,'Hippo',10);
-INSERT INTO animals VALUES(2,'Ele',20);
+-- INSERT INTO animals VALUES(1,'Hippo',10);
+-- INSERT INTO animals VALUES(2,'Ele',20);
 
 CREATE TABLE IF NOT EXISTS counters(
     type varchar(100),
@@ -118,3 +118,17 @@ CREATE TABLE IF NOT EXISTS payments(
 
 
 -- INSERT INTO counters VALUES ('холодная вода', '937332812', '2023-11-08'), ('холодная вода', '937332597', '2023-11-08');
+
+CREATE TABLE IF NOT EXISTS operation_groups(
+    name varchar(100)
+);
+
+CREATE TABLE IF NOT EXISTS operation(
+    date date,
+    type varchar(100),
+    operation_groups_id int,
+    value float,
+    proof int2,
+    descriptions text,
+    FOREIGN KEY (operation_groups_id) REFERENCES operation_groups(ROWID)
+);

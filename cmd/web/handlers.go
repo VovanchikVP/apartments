@@ -12,9 +12,18 @@ func myHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Served: %s\n", r.Host)
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request){
+func indexHandler(w http.ResponseWriter, r *http.Request) {
 	url := "cmd/web/tmpl/"
-	tmpl := template.Must(template.ParseFiles(url+"home.gohtml", url + "index.gohtml"))
+	tmpl := template.Must(template.ParseFiles(url+"home.gohtml", url+"index.gohtml"))
+	if r.Method != http.MethodPost {
+		_ = tmpl.ExecuteTemplate(w, "base", nil)
+		return
+	}
+}
+
+func typePaymentHandler(w http.ResponseWriter, r *http.Request) {
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"type_payment.gohtml", url+"index.gohtml"))
 	if r.Method != http.MethodPost {
 		_ = tmpl.ExecuteTemplate(w, "base", nil)
 		return

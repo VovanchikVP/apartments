@@ -1,4 +1,4 @@
-package type_pyment
+package operation_groups
 
 import (
 	"apartments/cmd/web/datastore"
@@ -6,21 +6,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-type TypePymentHandler struct {
-	datastore datastore.TypePyment
+type OperationGroupHandler struct {
+	datastore datastore.OperationGroups
 }
 
-func New(typePyment datastore.TypePyment) TypePymentHandler {
-	return TypePymentHandler{datastore: typePyment}
+func New(operationGroups datastore.OperationGroups) OperationGroupHandler {
+	return OperationGroupHandler{datastore: operationGroups}
 }
 
-func (a TypePymentHandler) Handler(w http.ResponseWriter, r *http.Request) {
+func (a OperationGroupHandler) Handler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		a.get(w, r)
@@ -33,10 +33,11 @@ func (a TypePymentHandler) Handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a TypePymentHandler) get(w http.ResponseWriter, r *http.Request) {
+func (a OperationGroupHandler) get(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	i, err := strconv.Atoi(id)
+	fmt.Println(i)
 	if err != nil {
 		_, _ = w.Write([]byte("Не верный формат ID"))
 		w.WriteHeader(http.StatusBadRequest)
@@ -52,18 +53,22 @@ func (a TypePymentHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url := "cmd/web/tmpl/"
-	tmpl := template.Must(template.ParseFiles(url+"type_payment.gohtml", url+"index.gohtml"))
+	tmpl := template.Must(template.ParseFiles(url+"operation_groups.gohtml", url+"index.gohtml"))
 	_ = tmpl.ExecuteTemplate(w, "base", struct {
-		Body []entities.TypePayment
+		Body []entities.OperationGroups
 	}{Body: resp})
 	return
 }
 
-func (a TypePymentHandler) create(w http.ResponseWriter, r *http.Request) {
-	typePayment := entities.TypePayment{
+func (a OperationGroupHandler) create(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	for key, value := range r.Form {
+		fmt.Printf("%s = %s\n", key, value)
+	}
+	operationGroup := entities.OperationGroups{
 		Name: r.FormValue("Name"),
 	}
-	resp, err := a.datastore.Create(typePayment)
+	resp, err := a.datastore.Create(operationGroup)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при создании записи."))
 		w.WriteHeader(http.StatusInternalServerError)
@@ -73,23 +78,23 @@ func (a TypePymentHandler) create(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(body)
 }
 
-func (a TypePymentHandler) delete(w http.ResponseWriter, r *http.Request) {
-	var typePayment entities.TypePayment
-	body, _ := ioutil.ReadAll(r.Body)
+func (a OperationGroupHandler) delete(w http.ResponseWriter, r *http.Request) {
+	var operationGroups entities.OperationGroups
+	body, _ := io.ReadAll(r.Body)
 	data := strings.Split(string(body), "&")
 	for i := 0; i < len(data); i++ {
 		d := strings.Split(data[i], "=")
-		if d[0] == "type_payment_id" {
+		if d[0] == "operation_groups_id" {
 			id, err := strconv.Atoi(d[1])
 			if err != nil {
 				_, _ = w.Write([]byte("Не верный формат ID"))
 				w.WriteHeader(http.StatusBadRequest)
 				return
 			}
-			typePayment.ID = id
+			operationGroups.ID = id
 		}
 	}
-	resp, err := a.datastore.Delete(typePayment)
+	resp, err := a.datastore.Delete(operationGroups)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при удалении записи."))
 		w.WriteHeader(http.StatusInternalServerError)

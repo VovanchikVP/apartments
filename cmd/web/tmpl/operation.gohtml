@@ -1,0 +1,52 @@
+{{define "body"}}
+    <h2>Список операций!</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Дата</th>
+            <th>Тип</th>
+            <th>Вид</th>
+            <th>Количество</th>
+            <th>Подтверждено</th>
+            <th>Описание</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="operation-row">
+                <td>{{.ID}}</td>
+                <td>{{.Date}}</td>
+                <td>{{.Type}}</td>
+                <td>{{.Group.Name}}</td>
+                <td>{{.Value}}</td>
+                <td>{{.Proof}}</td>
+                <td>{{.Descriptions}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <form id="id_form-operation" method="post">
+        <label for="id_date">Дата: </label>
+        <input type="date" id="id_date" name="Date" autocomplete="off"><br/>
+        <label for="id_type">Тип: </label>
+        <select id="id_type" name="Type">
+            <option value="expenses">Расход</option>
+            <option value="income">Доходы</option>
+        </select><br/>
+        <label for="id_operation_groups">Вид: </label>
+        <select id="id_operation_groups" name="OperationGroups">
+            {{range .OperationGroups}}
+                <option value="{{.ID}}">{{.Name}}</option>
+            {{end}}
+        </select><br/>
+        <label for="id_value">Значение: </label>
+        <input type="number" id="id_value" name="Value" autocomplete="off" step="0.01"><br/>
+        <label for="id_proof">Проведино: </label>
+        <input type="checkbox" id="id_proof" name="Proof"><br/>
+        <textarea name="Descriptions" form="id_form-operation">Описание</textarea><br/>
+        <input type="submit" value="Добавить">
+    </form>
+{{end}}

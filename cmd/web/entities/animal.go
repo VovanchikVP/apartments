@@ -6,7 +6,6 @@ type Animal struct {
 	Age  int
 }
 
-
 type Counter struct {
 	// Счетчик
 	ID               int
@@ -16,7 +15,6 @@ type Counter struct {
 	Apartment        Apartment
 }
 
-
 type Indication struct {
 	// Показание
 	ID      int
@@ -24,7 +22,6 @@ type Indication struct {
 	Date    string
 	Data    float32
 }
-
 
 type Tariff struct {
 	// Тариф
@@ -34,25 +31,22 @@ type Tariff struct {
 	Cost    float32
 }
 
-//++
 type TypePayment struct {
-	// Тип платежа
+	// Тип платежа ++
 	ID   int
 	Name string
 }
 
-//++
 type IDCard struct {
-	// Документ удостоверяющий личность
+	// Документ удостоверяющий личность ++
 	ID     int
 	Type   string
 	Number string
 	Issued string
 }
 
-
 type Person struct {
-	// Человек
+	// Человек ++
 	ID         int
 	LastName   string
 	FirstName  string
@@ -62,9 +56,8 @@ type Person struct {
 	Address    Address
 }
 
-//++
 type Address struct {
-	// Адрес регистрации
+	// Адрес регистрации ++
 	ID        int
 	Index     int
 	City      string
@@ -73,16 +66,14 @@ type Address struct {
 	Apartment string
 }
 
-//++
 type PropertyDocuments struct {
-	// Документ о собственности
+	// Документ о собственности ++
 	ID     int
 	Type   string
 	Number string
 	Date   string
 }
 
-//
 type Apartment struct {
 	// Квартира
 	ID                int
@@ -91,7 +82,6 @@ type Apartment struct {
 	PropertyDocuments PropertyDocuments
 	Rent              bool
 }
-
 
 type ContractRent struct {
 	// Договор аренды
@@ -118,13 +108,11 @@ type ContractRent struct {
 	FileContract          string
 }
 
-
 type Tenant struct {
 	ID           int
 	ContractRent ContractRent
 	Person       Person
 }
-
 
 type Payment struct {
 	ID        int

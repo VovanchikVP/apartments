@@ -8,6 +8,8 @@ import (
 	"apartments/cmd/web/datastore/counter"
 	"apartments/cmd/web/datastore/id_card"
 	"apartments/cmd/web/datastore/indication"
+	"apartments/cmd/web/datastore/operation"
+	"apartments/cmd/web/datastore/operation_groups"
 	"apartments/cmd/web/datastore/payment"
 	"apartments/cmd/web/datastore/person"
 	"apartments/cmd/web/datastore/property_document"
@@ -21,16 +23,19 @@ import (
 	handlerCounter "apartments/cmd/web/delivery/counter"
 	handlerIDCard "apartments/cmd/web/delivery/id_card"
 	handlerIndication "apartments/cmd/web/delivery/indication"
+	handlerOperation "apartments/cmd/web/delivery/operation"
+	handlerOperationGroups "apartments/cmd/web/delivery/operation_groups"
 	handlerPayment "apartments/cmd/web/delivery/payment"
 	handlerPerson "apartments/cmd/web/delivery/person"
 	handlerProperty "apartments/cmd/web/delivery/property_document"
 	handlerTariff "apartments/cmd/web/delivery/tariff"
 	handlerTenant "apartments/cmd/web/delivery/tenant"
-	handlerTypePyment "apartments/cmd/web/delivery/type_pyment"
+	handlerTypePayment "apartments/cmd/web/delivery/type_pyment"
 	"apartments/cmd/web/driver"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -40,6 +45,13 @@ func main() {
 	if err != nil {
 		log.Println("could not connect to sql, err:", err)
 		return
+	}
+	data, err := os.ReadFile("cmd/web/animal.sql")
+	if err == nil {
+		_, err := db.Exec(string(data))
+		if err != nil {
+			fmt.Print(err)
+		}
 	}
 
 	datastore := animal.New(db)
@@ -63,7 +75,7 @@ func main() {
 	http.HandleFunc("/id_cards", handlerIC.Handler)
 
 	typePymentDB := type_pyment.New(db)
-	handlerTP := handlerTypePyment.New(typePymentDB)
+	handlerTP := handlerTypePayment.New(typePymentDB)
 	http.HandleFunc("/type_payments", handlerTP.Handler)
 
 	personDB := person.New(db)
@@ -93,6 +105,14 @@ func main() {
 	paymentDB := payment.New(db)
 	handlerPm := handlerPayment.New(paymentDB)
 	http.HandleFunc("/payment", handlerPm.Handler)
+
+	operationGroupsDB := operation_groups.New(db)
+	handlerOG := handlerOperationGroups.New(operationGroupsDB)
+	http.HandleFunc("/operation_groups", handlerOG.Handler)
+
+	operationDB := operation.New(db)
+	handlerO := handlerOperation.New(operationDB, operationGroupsDB)
+	http.HandleFunc("/operation", handlerO.Handler)
 
 	http.HandleFunc("/time", timeHandler)
 	http.HandleFunc("/", indexHandler)

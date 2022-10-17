@@ -81,3 +81,17 @@ type Payment interface {
 	Create(payment entities.Payment) (entities.Payment, error)
 	GetByID(id int) (entities.Payment, error)
 }
+
+type OperationGroups interface {
+	Get(id int) ([]entities.OperationGroups, error)
+	Create(operationGroups entities.OperationGroups) (entities.OperationGroups, error)
+	GetByID(id int) (entities.OperationGroups, error)
+	Delete(operationGroups entities.OperationGroups) (bool, error)
+}
+
+type Operation interface {
+	Get(id int) ([]entities.Operation, error)
+	Create(operationGroups entities.Operation) (entities.Operation, error)
+	GetByID(id int) (entities.Operation, error)
+	Delete(operationGroups entities.Operation) (bool, error)
+}
