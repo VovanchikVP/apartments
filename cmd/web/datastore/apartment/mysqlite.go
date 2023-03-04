@@ -3,10 +3,8 @@ package apartment
 import (
 	"apartments/cmd/web/datastore/address"
 	"apartments/cmd/web/datastore/property_document"
-	"apartments/cmd/web/driver"
 	"apartments/cmd/web/entities"
 	"database/sql"
-	"log"
 )
 
 type ApartmentStorer struct {
@@ -17,19 +15,13 @@ func New(db *sql.DB) ApartmentStorer {
 	return ApartmentStorer{db: db}
 }
 
-func (a ApartmentStorer) GetByID(id int) (apartment entities.Apartment, err error){
+func (a ApartmentStorer) GetByID(id int) (apartment entities.Apartment, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM apartments WHERE ROWID = ?", id)
 
-	db, err := driver.ConnectToMySQL()
-	if err != nil {
-		log.Println("could not connect to sql, err:", err)
-		return entities.Apartment{}, err
-	}
-
-	addressDB := address.New(db)
-	propertyDB := property_document.New(db)
+	addressDB := address.New(a.db)
+	propertyDB := property_document.New(a.db)
 
 	switch err = row.Scan(&apartment.ID, &apartment.Address.ID, &apartment.CountRooms, &apartment.PropertyDocuments.ID, &apartment.Rent); err {
 	case sql.ErrNoRows:
@@ -61,14 +53,8 @@ func (a ApartmentStorer) Get(id int) (apartments []entities.Apartment, err error
 		return nil, err
 	}
 
-	db, err := driver.ConnectToMySQL()
-	if err != nil {
-		log.Println("could not connect to sql, err:", err)
-		return nil, err
-	}
-
-	addressDB := address.New(db)
-	propertyDB := property_document.New(db)
+	addressDB := address.New(a.db)
+	propertyDB := property_document.New(a.db)
 
 	for rows.Next() {
 		var a entities.Apartment
@@ -83,7 +69,9 @@ func (a ApartmentStorer) Get(id int) (apartments []entities.Apartment, err error
 
 func (a ApartmentStorer) Create(apartment entities.Apartment) (entities.Apartment, error) {
 
-	res, err := a.db.Exec("INSERT INTO apartments(address_id, count_rooms, property_document_id, rent) VALUES (?, ?, ?, ?)", apartment.Address.ID, apartment.CountRooms, apartment.PropertyDocuments.ID, apartment.Rent)
+	res, err := a.db.Exec(`INSERT INTO apartments(address_id, count_rooms, property_document_id, rent) 
+								 VALUES (?, ?, ?, ?)`, apartment.Address.ID, apartment.CountRooms,
+		apartment.PropertyDocuments.ID, apartment.Rent)
 
 	if err != nil {
 		return entities.Apartment{}, err
@@ -93,4 +81,12 @@ func (a ApartmentStorer) Create(apartment entities.Apartment) (entities.Apartmen
 	apartment.ID = int(id)
 
 	return apartment, nil
+}
+
+func (a ApartmentStorer) Delete(apartment entities.Apartment) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM apartments WHERE ROWID = ?", apartment.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

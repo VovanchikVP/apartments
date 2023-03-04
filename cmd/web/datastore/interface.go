@@ -50,6 +50,7 @@ type Apartment interface {
 	Get(id int) ([]entities.Apartment, error)
 	Create(apartment entities.Apartment) (entities.Apartment, error)
 	GetByID(id int) (entities.Apartment, error)
+	Delete(apartment entities.Apartment) (bool, error)
 }
 
 type Indication interface {

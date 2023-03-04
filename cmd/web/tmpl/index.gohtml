@@ -5,15 +5,17 @@
         <meta charset="UTF-8">
         <title>Контроль аренды!</title>
         <link rel="stylesheet" href="/static/css/css.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://kit.fontawesome.com/227acb4cd8.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <a href="/" style="margin-right: 20px;">Главная</a>
-        <a href="/type_payments?id=0" style="margin-right: 20px;">Типы платежей.</a>
         <a href="/id_cards?id=0" style="margin-right: 20px;">Список удостоверений</a>
-        <a href="/address?id=0" style="margin-right: 20px;">Список адресов</a>
+        <a href="/apartment?id=0" style="margin-right: 20px;">Квартиры</a>
         <a href="/property_document?id=0" style="margin-right: 20px;">Документы о собственности</a>
+        <a href="/type_payments?id=0" style="margin-right: 20px;">Типы платежей</a>
+        <a href="/address?id=0" style="margin-right: 20px;">Список адресов</a>
         <a href="/operation_groups?id=0" style="margin-right: 20px;">Виды операций</a>
         <a href="/operation?id=0" style="margin-right: 20px;">Операций</a>
         {{template "body" .}}

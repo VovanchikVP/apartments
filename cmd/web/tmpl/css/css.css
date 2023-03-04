@@ -10,8 +10,38 @@ td.tools i:hover{
 table thead th{
     text-align: center;
     border-bottom: black 1px solid;
+    padding: 5px 8px;
 }
 
 table tr td {
     border-bottom: black 1px solid;
+    padding: 2px 8px;
+}
+
+input, select, textarea {
+    width: 100%;
+}
+
+div.col-12 textarea{
+    margin-top: 10px;
+}
+
+div.col-6 select{
+    height: 30px;
+}
+
+div label{
+    margin-bottom: 0;
+    font-size: 11px;
+    margin-top: 10px;
+}
+
+div.check label{
+    margin-bottom: 5px;
+    font-size: 17px;
+    margin-top: 0;
+}
+
+input[type="submit"]{
+    margin-top: 10px;
 }

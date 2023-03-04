@@ -1,27 +1,39 @@
 {{define "body"}}
-    <h2>Список типов платежей!</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Имя</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {{range .Body}}
-            <tr row_id="{{.ID}}" class="type_payment-row">
-                <td>{{.ID}}</td>
-                <td>{{.Name}}</td>
-                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
-            </tr>
-        {{end}}
-        </tbody>
-    </table>
-    <hr/>
-    <form id="id_form-type_payment" method="post">
-        <label for="id_name-type">Название типа платежа: </label>
-        <input type="text" id="id_name-type" name="Name" autocomplete="off">
-        <input type="submit" value="Добавить тип">
-    </form>
+    <div class="container" style="max-width: 2000px">
+        <div class="row">
+            <div class="col-4">
+                <h2>Добавить тип платежа</h2>
+                <form id="id_form-type_payment" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="id_name-type">Название типа платежа: </label>
+                            <input type="text" id="id_name-type" name="Name" autocomplete="off">
+                        </div>
+                    </div>
+                    <input type="submit" value="Добавить">
+                </form>
+            </div>
+            <div class="col-8">
+                <h2>Список типов платежей</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{range .Body}}
+                        <tr row_id="{{.ID}}" class="type_payment-row">
+                            <td>{{.ID}}</td>
+                            <td>{{.Name}}</td>
+                            <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+                        </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {{end}}

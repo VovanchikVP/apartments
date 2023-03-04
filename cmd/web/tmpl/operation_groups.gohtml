@@ -1,27 +1,39 @@
 {{define "body"}}
-    <h2>Список видов операций!</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Имя</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {{range .Body}}
-            <tr row_id="{{.ID}}" class="operation_groups-row">
-                <td>{{.ID}}</td>
-                <td>{{.Name}}</td>
-                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
-            </tr>
-        {{end}}
-        </tbody>
-    </table>
-    <hr/>
-    <form id="id_form-operation_groups" method="post">
-        <label for="id_name-type">Вид операции: </label>
-        <input type="text" id="id_name-type" name="Name" autocomplete="off">
-        <input type="submit" value="Добавить">
-    </form>
+    <div class="container" style="max-width: 2000px">
+        <div class="row">
+            <div class="col-4">
+                <h2>Добавить тип операции</h2>
+                <form id="id_form-operation_groups" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="id_name-type">Вид операции: </label>
+                            <input type="text" id="id_name-type" name="Name" autocomplete="off">
+                        </div>
+                    </div>
+                    <input type="submit" value="Добавить">
+                </form>
+            </div>
+            <div class="col-8">
+                <h2>Список видов операций</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{range .Body}}
+                        <tr row_id="{{.ID}}" class="operation_groups-row">
+                            <td>{{.ID}}</td>
+                            <td>{{.Name}}</td>
+                            <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+                        </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {{end}}

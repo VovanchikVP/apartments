@@ -83,7 +83,7 @@ func main() {
 	http.HandleFunc("/person", handlerP.Handler)
 
 	apartmentDB := apartment.New(db)
-	handlerAp := handlerApartment.New(apartmentDB)
+	handlerAp := handlerApartment.New(apartmentDB, addressDB, propertyDB)
 	http.HandleFunc("/apartment", handlerAp.Handler)
 
 	indicationDB := indication.New(db)

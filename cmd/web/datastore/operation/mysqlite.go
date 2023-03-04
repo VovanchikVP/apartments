@@ -3,6 +3,9 @@ package operation
 import (
 	"apartments/cmd/web/entities"
 	"database/sql"
+	"math"
+	"sort"
+	"strings"
 )
 
 type OperationStorer struct {
@@ -61,8 +64,13 @@ func (a OperationStorer) Get(id int) (operation []entities.Operation, err error)
 	for rows.Next() {
 		var a entities.Operation
 		_ = rows.Scan(&a.ID, &a.Date, &a.Type, &a.Group.ID, &a.Group.Name, &a.Value, &a.Proof, &a.Descriptions)
+		a.Date = strings.Replace(a.Date[:10], "-", ".", -1)
+		a.Value = math.Round(a.Value*100) / 100
 		operation = append(operation, a)
 	}
+	sort.SliceStable(operation, func(i, j int) bool {
+		return operation[i].Date > operation[j].Date
+	})
 
 	return operation, nil
 }

@@ -1,42 +1,63 @@
 {{define "body"}}
-<h2>Список адресов!</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Индекс</th>
-                <th>Город</th>
-                <th>Улица</th>
-                <th>Дом</th>
-                <th>Квартира</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {{range .Body}}
-            <tr row_id="{{.ID}}" class="address-row">
-                <td>{{.ID}}</td>
-                <td>{{.Index}}</td>
-                <td>{{.City}}</td>
-                <td>{{.Street}}</td>
-                <td>{{.House}}</td>
-                <td>{{.Apartment}}</td>
-                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
-            </tr>
-        {{end}}
-        </tbody>
-    </table>
-    <form id="id_form-address" method="post">
-        <label for="id_index">Индекс: </label>
-        <input type="text" id="id_index" name="Index" autocomplete="off"><br/>
-        <label for="id_city">Город: </label>
-        <input type="text" id="id_city" name="City" autocomplete="off"><br/>
-        <label for="id_street">Улица: </label>
-        <input type="text" id="id_street" name="Street" autocomplete="off"><br/>
-        <label for="id_house">Дом: </label>
-        <input type="text" id="id_house" name="House" autocomplete="off"><br/>
-        <label for="id_apartment">Квартира: </label>
-        <input type="text" id="id_apartment" name="Apartment" autocomplete="off"><br/>
-        <input type="submit" value="Добавить документ">
-    </form>
+<div class="container" style="max-width: 2000px">
+    <div class="row">
+        <div class="col-4">
+            <h2>Добавить адрес</h2>
+            <form id="id_form-address" method="post">
+                <div class="row">
+                    <div class="col-6">
+                        <label for="id_index">Индекс: </label>
+                        <input type="text" id="id_index" name="Index" autocomplete="off">
+                    </div>
+                    <div class="col-6">
+                        <label for="id_city">Город: </label>
+                        <input type="text" id="id_city" name="City" autocomplete="off">
+                    </div>
+                    <div class="col-6">
+                        <label for="id_street">Улица: </label>
+                        <input type="text" id="id_street" name="Street" autocomplete="off">
+                    </div>
+                    <div class="col-3">
+                        <label for="id_house">Дом: </label>
+                        <input type="text" id="id_house" name="House" autocomplete="off">
+                    </div>
+                    <div class="col-3">
+                        <label for="id_apartment">Квартира: </label>
+                        <input type="text" id="id_apartment" name="Apartment" autocomplete="off">
+                    </div>
+                </div>
+                <input type="submit" value="Добавить">
+            </form>
+        </div>
+        <div class="col-8">
+            <h2>Список адресов</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Индекс</th>
+                    <th>Город</th>
+                    <th>Улица</th>
+                    <th>Дом</th>
+                    <th>Квартира</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .Body}}
+                    <tr row_id="{{.ID}}" class="address-row">
+                        <td>{{.ID}}</td>
+                        <td>{{.Index}}</td>
+                        <td>{{.City}}</td>
+                        <td>{{.Street}}</td>
+                        <td>{{.House}}</td>
+                        <td>{{.Apartment}}</td>
+                        <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {{end}}
