@@ -5,6 +5,7 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"strconv"
@@ -38,7 +39,7 @@ func (a OperationHandler) Handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a OperationHandler) options(w http.ResponseWriter, r *http.Request) {
+func (a OperationHandler) options(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Request-Headers, Access-Control-Request-Method, Connection, Host, Origin, User-Agent, Referer, Cache-Control, X-header")
@@ -65,70 +66,59 @@ func (a OperationHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(resp)
+	//w.Header().Set("Content-Type", "application/json")
+	//w.WriteHeader(http.StatusCreated)
+	//_ = json.NewEncoder(w).Encode(resp)
+
+	respOperationGroups, err := a.datastoreOperationGroups.Get(0)
+
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"operation.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body            []entities.Operation
+		OperationGroups []entities.OperationGroups
+	}{
+		Body:            resp,
+		OperationGroups: respOperationGroups,
+	})
 	return
 }
 
-type FormOperation struct {
-	Date           string
-	OperationGroup string
-	Type           string
-	Value          string
-}
-
 func (a OperationHandler) create(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	var form FormOperation
-	err := json.NewDecoder(r.Body).Decode(&form)
+	proof := false
+	if r.FormValue("Proof") == "on" {
+		proof = true
+	}
+	value, err := strconv.ParseFloat(r.FormValue("Value"), 32)
 	if err != nil {
 		fmt.Println(err)
-		fmt.Println(1)
-		_, _ = w.Write([]byte("Ошибка в запросе"))
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println("test")
-		return
 	}
-	fmt.Println(form)
-	value, err := strconv.ParseFloat(form.Value, 32)
+	operationGroupId, err := strconv.Atoi(r.FormValue("OperationGroups"))
 	if err != nil {
 		fmt.Println(err)
-		fmt.Println(2)
-		_, _ = w.Write([]byte("Ошибка в запросе"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	operationGroupId, err := strconv.Atoi(form.OperationGroup)
-	if err != nil {
 		_, _ = w.Write([]byte("Ошибка в запросе"))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	operation := entities.Operation{
-		Date:  form.Date,
-		Type:  form.Type,
-		Proof: true,
-		Group: entities.OperationGroups{ID: operationGroupId},
-		Value: value,
+		Date:         r.FormValue("Date"),
+		Type:         r.FormValue("Type"),
+		Proof:        proof,
+		Group:        entities.OperationGroups{ID: operationGroupId},
+		Value:        value,
+		Descriptions: r.FormValue("Descriptions"),
 	}
 
 	resp, err := a.datastoreOperation.Create(operation)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при создании записи."))
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	res, err := a.datastoreOperation.Get(resp.ID)
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	jData, err := json.Marshal(res)
-	_, _ = w.Write(jData)
-	return
+	body, _ := json.Marshal(resp)
+	_, _ = w.Write(body)
 }
 
 func (a OperationHandler) delete(w http.ResponseWriter, r *http.Request) {
@@ -157,6 +147,6 @@ func (a OperationHandler) delete(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(body)
 }
 
-func (a OperationHandler) patch(w http.ResponseWriter, r *http.Request) {
+func (a OperationHandler) patch(_ http.ResponseWriter, _ *http.Request) {
 	fmt.Println("patch")
 }

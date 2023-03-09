@@ -5,6 +5,7 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"strconv"
@@ -52,15 +53,15 @@ func (a OperationGroupHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(resp)
+	//w.Header().Set("Content-Type", "application/json")
+	//w.WriteHeader(http.StatusCreated)
+	//_ = json.NewEncoder(w).Encode(resp)
 
-	//url := "cmd/web/tmpl/"
-	//tmpl := template.Must(template.ParseFiles(url+"operation_groups.gohtml", url+"index.gohtml"))
-	//_ = tmpl.ExecuteTemplate(w, "base", struct {
-	//	Body []entities.OperationGroups
-	//}{Body: resp})
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"operation_groups.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body []entities.OperationGroups
+	}{Body: resp})
 	return
 }
 
