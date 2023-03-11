@@ -59,7 +59,8 @@ func main() {
 	http.HandleFunc("/animal", handler.Handler)
 
 	datastoreC := counter.New(db)
-	handlerC := handlerCounter.New(datastoreC)
+	datastoreA := apartment.New(db)
+	handlerC := handlerCounter.New(datastoreC, datastoreA)
 	http.HandleFunc("/counter", handlerC.Handler)
 
 	addressDB := address.New(db)

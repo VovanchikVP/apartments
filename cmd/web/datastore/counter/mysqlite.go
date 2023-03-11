@@ -16,7 +16,7 @@ func New(db *sql.DB) CounterStorer {
 	return CounterStorer{db: db}
 }
 
-func (a CounterStorer) GetByID(id int) (counter entities.Counter, err error){
+func (a CounterStorer) GetByID(id int) (counter entities.Counter, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM counters WHERE ROWID = ?", id)
@@ -104,4 +104,12 @@ func (a CounterStorer) GetLastID() (int, error) {
 	}
 
 	return id, nil
+}
+
+func (a CounterStorer) Delete(counter entities.Counter) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM counters WHERE ROWID = ?", counter.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

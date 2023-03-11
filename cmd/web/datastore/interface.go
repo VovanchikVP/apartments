@@ -11,6 +11,7 @@ type Counter interface {
 	Get(id int) ([]entities.Counter, error)
 	Create(counter entities.Counter) (entities.Counter, error)
 	GetByID(id int) (entities.Counter, error)
+	Delete(counter entities.Counter) (bool, error)
 }
 
 type Address interface {

@@ -5,17 +5,21 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"html/template"
 	"net/http"
 	"strconv"
 )
 
 type CounterHandler struct {
-	datastore datastore.Counter
+	datastoreCounter   datastore.Counter
+	datastoreApartment datastore.Apartment
 }
 
-func New(counter datastore.Counter) CounterHandler {
-	return CounterHandler{datastore: counter}
+func New(counter datastore.Counter, apartment datastore.Apartment) CounterHandler {
+	return CounterHandler{
+		datastoreCounter:   counter,
+		datastoreApartment: apartment,
+	}
 }
 
 func (a CounterHandler) Handler(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +28,8 @@ func (a CounterHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		a.get(w, r)
 	case http.MethodPost:
 		a.create(w, r)
+	case http.MethodDelete:
+		a.delete(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -31,16 +37,14 @@ func (a CounterHandler) Handler(w http.ResponseWriter, r *http.Request) {
 
 func (a CounterHandler) get(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
-
 	i, err := strconv.Atoi(id)
-	fmt.Println(i)
 	if err != nil {
 		_, _ = w.Write([]byte("Не верный формат ID"))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	resp, err := a.datastore.Get(i)
+	resp, err := a.datastoreCounter.Get(i)
 	if err != nil {
 		fmt.Println(err)
 		_, _ = w.Write([]byte("запись с переданным ID отсутствует в базе данных"))
@@ -48,29 +52,58 @@ func (a CounterHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, _ := json.Marshal(resp)
-	_, _ = w.Write(body)
+	respApartments, err := a.datastoreApartment.Get(0)
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"counter.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body       []entities.Counter
+		Apartments []entities.Apartment
+	}{
+		Body:       resp,
+		Apartments: respApartments,
+	})
+	return
 }
 
 func (a CounterHandler) create(w http.ResponseWriter, r *http.Request) {
 	var counter entities.Counter
-
-	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &counter)
+	counter.Number = r.FormValue("Number")
+	counter.Type = r.FormValue("Type")
+	apartmentId, err := strconv.Atoi(r.FormValue("Apartment"))
 	if err != nil {
-		fmt.Println(string(body))
 		_, _ = w.Write([]byte("Ошибка в запросе"))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	counter.Apartment.ID = apartmentId
+	counter.VerificationDate = r.FormValue("VerificationDate")
 
-	resp, err := a.datastore.Create(counter)
+	resp, err := a.datastoreCounter.Create(counter)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при создании записи."))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	body, _ = json.Marshal(resp)
+	body, _ := json.Marshal(resp)
+	_, _ = w.Write(body)
+}
+
+func (a CounterHandler) delete(w http.ResponseWriter, r *http.Request) {
+	var counter entities.Counter
+	id, err := strconv.Atoi(r.FormValue("counter_id"))
+	if err != nil {
+		_, _ = w.Write([]byte("Не верный формат ID"))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	counter.ID = id
+	resp, err := a.datastoreCounter.Delete(counter)
+	if err != nil {
+		_, _ = w.Write([]byte("Ошибка при удалении записи."))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	body, _ := json.Marshal(resp)
 	_, _ = w.Write(body)
 }

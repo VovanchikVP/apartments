@@ -37,7 +37,6 @@ func (a IDCardHandler) get(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	i, err := strconv.Atoi(id)
-	fmt.Println(i)
 	if err != nil {
 		_, _ = w.Write([]byte("Не верный формат ID"))
 		w.WriteHeader(http.StatusBadRequest)
@@ -80,9 +79,9 @@ func (a IDCardHandler) delete(w http.ResponseWriter, r *http.Request) {
 	var idCard entities.IDCard
 	body, _ := ioutil.ReadAll(r.Body)
 	data := strings.Split(string(body), "&")
-	for i:=0; i<len(data); i++ {
+	for i := 0; i < len(data); i++ {
 		d := strings.Split(data[i], "=")
-		if d[0] == "id_card_id"{
+		if d[0] == "id_card_id" {
 			id, err := strconv.Atoi(d[1])
 			if err != nil {
 				_, _ = w.Write([]byte("Не верный формат ID"))

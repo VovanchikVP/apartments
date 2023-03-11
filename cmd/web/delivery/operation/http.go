@@ -18,7 +18,8 @@ type OperationHandler struct {
 }
 
 func New(operation datastore.Operation, operationGroups datastore.OperationGroups) OperationHandler {
-	return OperationHandler{datastoreOperation: operation,
+	return OperationHandler{
+		datastoreOperation:       operation,
 		datastoreOperationGroups: operationGroups}
 }
 
@@ -65,10 +66,6 @@ func (a OperationHandler) get(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	//w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusCreated)
-	//_ = json.NewEncoder(w).Encode(resp)
 
 	respOperationGroups, err := a.datastoreOperationGroups.Get(0)
 

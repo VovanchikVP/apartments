@@ -1,0 +1,43 @@
+{{define "body"}}
+    <h2>Счетчики!</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Тип</th>
+            <th>Номер</th>
+            <th>Дата поверки</th>
+            <th>Место установки</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="counter-row">
+                <td>{{.ID}}</td>
+                <td>{{.Type}}</td>
+                <td>{{.Number}}</td>
+                <td>{{.VerificationDate}}</td>
+                <td>{{.Apartment.Address}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <hr/>
+    <form id="id_form-counter" method="post">
+        <label for="id_type">Тип счетчика: </label>
+        <input type="text" id="id_type" name="Type" autocomplete="off"><br/>
+        <label for="id_number">Номер счетчика: </label>
+        <input type="text" id="id_number" name="Number" autocomplete="off"><br/>
+        <label for="id_verification_date">Дата поверки: </label>
+        <input type="date" id="id_verification_date" name="VerificationDate" autocomplete="off"><br/>
+        <label for="id_apartments">Место установки: </label>
+        <select id="id_apartments" name="Apartment">
+            {{range .Apartments}}
+                <option value="{{.ID}}">{{.Address.City}} {{.Address.Street}} {{.Address.House}}-{{.Address.Apartment}}</option>
+            {{end}}
+        </select>
+        <input type="submit" value="Добавить счетчик">
+    </form>
+{{end}}
