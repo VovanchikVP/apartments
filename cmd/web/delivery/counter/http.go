@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type CounterHandler struct {
@@ -91,19 +93,26 @@ func (a CounterHandler) create(w http.ResponseWriter, r *http.Request) {
 
 func (a CounterHandler) delete(w http.ResponseWriter, r *http.Request) {
 	var counter entities.Counter
-	id, err := strconv.Atoi(r.FormValue("counter_id"))
-	if err != nil {
-		_, _ = w.Write([]byte("Не верный формат ID"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	body, _ := io.ReadAll(r.Body)
+	data := strings.Split(string(body), "&")
+	for i := 0; i < len(data); i++ {
+		d := strings.Split(data[i], "=")
+		if d[0] == "counter_id" {
+			id, err := strconv.Atoi(d[1])
+			if err != nil {
+				_, _ = w.Write([]byte("Не верный формат ID"))
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			counter.ID = id
+		}
 	}
-	counter.ID = id
 	resp, err := a.datastoreCounter.Delete(counter)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при удалении записи."))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	body, _ := json.Marshal(resp)
+	body, _ = json.Marshal(resp)
 	_, _ = w.Write(body)
 }

@@ -92,6 +92,21 @@ $(function () {
         let data = {'operation_groups_id': id_row}
         rest_ajax('delete', data, url);
     });
+    // Отправка формы добавления счетчика.
+    body.on('submit', '#id_form-counter', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        console.log(data_form)
+        let url = '/counter';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.counter-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/counter';
+        let data = {'counter_id': id_row}
+        rest_ajax('delete', data, url);
+    });
 });
 
 function rest_ajax(method, data, url) {

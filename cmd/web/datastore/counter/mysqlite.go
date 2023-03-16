@@ -44,9 +44,11 @@ func (a CounterStorer) Get(id int) (counters []entities.Counter, err error) {
 	var rows *sql.Rows
 
 	if id != 0 {
-		rows, err = a.db.Query("SELECT * FROM counters WHERE ROWID = ?", id)
+		rows, err = a.db.Query(`SELECT c.ROWID, c.type, c.number, c.verification_date, c.apartment_id 
+									  FROM counters c WHERE ROWID = ?`, id)
 	} else {
-		rows, err = a.db.Query("SELECT * FROM counters")
+		rows, err = a.db.Query(`SELECT c.ROWID, c.type, c.number, c.verification_date, c.apartment_id  
+    								  FROM counters c`)
 	}
 
 	if rows != nil {
@@ -73,7 +75,6 @@ func (a CounterStorer) Get(id int) (counters []entities.Counter, err error) {
 		a.Apartment, _ = apartmentDB.GetByID(a.Apartment.ID)
 		counters = append(counters, a)
 	}
-
 	return counters, nil
 }
 
