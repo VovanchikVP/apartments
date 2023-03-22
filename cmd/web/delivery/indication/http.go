@@ -5,17 +5,22 @@ import (
 	"apartments/cmd/web/entities"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
 type IndicationHandler struct {
-	datastore datastore.Indication
+	datastoreIndication datastore.Indication
+	datastoreCounter    datastore.Counter
 }
 
-func New(indication datastore.Indication) IndicationHandler {
-	return IndicationHandler{datastore: indication}
+func New(indication datastore.Indication, counter datastore.Counter) IndicationHandler {
+	return IndicationHandler{
+		datastoreIndication: indication,
+		datastoreCounter:    counter,
+	}
 }
 
 func (a IndicationHandler) Handler(w http.ResponseWriter, r *http.Request) {
@@ -33,23 +38,30 @@ func (a IndicationHandler) get(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	i, err := strconv.Atoi(id)
-	fmt.Println(i)
 	if err != nil {
 		_, _ = w.Write([]byte("Не верный формат ID"))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	resp, err := a.datastore.Get(i)
+	resp, err := a.datastoreIndication.Get(i)
 	if err != nil {
 		fmt.Println(err)
 		_, _ = w.Write([]byte("запись с переданным ID отсутствует в базе данных"))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	body, _ := json.Marshal(resp)
-	_, _ = w.Write(body)
+	respCounters, err := a.datastoreCounter.Get(0)
+	url := "cmd/web/tmpl/"
+	tmpl := template.Must(template.ParseFiles(url+"indication.gohtml", url+"index.gohtml"))
+	_ = tmpl.ExecuteTemplate(w, "base", struct {
+		Body     []entities.Indication
+		Counters []entities.Counter
+	}{
+		Body:     resp,
+		Counters: respCounters,
+	})
+	return
 }
 
 func (a IndicationHandler) create(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +76,7 @@ func (a IndicationHandler) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := a.datastore.Create(indication)
+	resp, err := a.datastoreIndication.Create(indication)
 	if err != nil {
 		_, _ = w.Write([]byte("Ошибка при создании записи."))
 		w.WriteHeader(http.StatusInternalServerError)

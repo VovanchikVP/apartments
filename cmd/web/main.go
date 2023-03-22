@@ -88,7 +88,7 @@ func main() {
 	http.HandleFunc("/apartment", handlerAp.Handler)
 
 	indicationDB := indication.New(db)
-	handlerI := handlerIndication.New(indicationDB)
+	handlerI := handlerIndication.New(indicationDB, datastoreC)
 	http.HandleFunc("/indication", handlerI.Handler)
 
 	tariffDB := tariff.New(db)

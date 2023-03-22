@@ -1,0 +1,39 @@
+{{define "body"}}
+    <h2>Показания счетчиков!</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Номер счетчика</th>
+            <th>Дата</th>
+            <th>Показание</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="counter-row">
+                <td>{{.ID}}</td>
+                <td>{{.Counter.Number}}</td>
+                <td>{{.Date}}</td>
+                <td>{{.Data}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <hr/>
+    <form id="id_form-counter" method="post">
+        <label for="id_date">Дата: </label>
+        <input type="date" id="id_date" name="Date" autocomplete="off"><br/>
+        <label for="id_data">Показание: </label>
+        <input type="number" id="id_data" name="Data" autocomplete="off"><br/>
+        <label for="id_counter">Счетчик: </label>
+        <select id="id_counter" name="Counter">
+            {{range .Counters}}
+                <option value="{{.ID}}">{{.Number}}</option>
+            {{end}}
+        </select>
+        <input type="submit" value="Добавить показание">
+    </form>
+{{end}}
