@@ -6,9 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type IndicationHandler struct {
@@ -29,6 +30,8 @@ func (a IndicationHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		a.get(w, r)
 	case http.MethodPost:
 		a.create(w, r)
+	case http.MethodDelete:
+		a.delete(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -66,11 +69,12 @@ func (a IndicationHandler) get(w http.ResponseWriter, r *http.Request) {
 
 func (a IndicationHandler) create(w http.ResponseWriter, r *http.Request) {
 	var indication entities.Indication
-
-	body, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(body, &indication)
+	indication.Date = r.FormValue("Date")
+	indicationConv, err := strconv.ParseFloat(r.FormValue("Data"), 32)
+	indicationCount, err := strconv.Atoi(r.FormValue("Counter"))
+	indication.Data = float32(indicationConv)
+	indication.Counter = entities.Counter{ID: indicationCount}
 	if err != nil {
-		fmt.Println(string(body))
 		_, _ = w.Write([]byte("Ошибка в запросе"))
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -83,6 +87,32 @@ func (a IndicationHandler) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	body, _ := json.Marshal(resp)
+	_, _ = w.Write(body)
+}
+
+func (a IndicationHandler) delete(w http.ResponseWriter, r *http.Request) {
+	var indication entities.Indication
+	body, _ := io.ReadAll(r.Body)
+	data := strings.Split(string(body), "&")
+	for i := 0; i < len(data); i++ {
+		d := strings.Split(data[i], "=")
+		if d[0] == "indication_id" {
+			id, err := strconv.Atoi(d[1])
+			if err != nil {
+				_, _ = w.Write([]byte("Не верный формат ID"))
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			indication.ID = id
+		}
+	}
+	resp, err := a.datastoreIndication.Delete(indication)
+	if err != nil {
+		_, _ = w.Write([]byte("Ошибка при удалении записи."))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	body, _ = json.Marshal(resp)
 	_, _ = w.Write(body)
 }

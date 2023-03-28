@@ -107,6 +107,20 @@ $(function () {
         let data = {'counter_id': id_row}
         rest_ajax('delete', data, url);
     });
+    // Отправка формы добавления показаний.
+    body.on('submit', '#id_form-indication', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        let url = '/indication';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.indication-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/indication';
+        let data = {'indication_id': id_row}
+        rest_ajax('delete', data, url);
+    });
 });
 
 function rest_ajax(method, data, url) {

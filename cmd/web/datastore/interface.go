@@ -58,6 +58,7 @@ type Indication interface {
 	Get(id int) ([]entities.Indication, error)
 	Create(indication entities.Indication) (entities.Indication, error)
 	GetByID(id int) (entities.Indication, error)
+	Delete(indication entities.Indication) (bool, error)
 }
 
 type Tariff interface {

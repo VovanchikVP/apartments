@@ -12,7 +12,7 @@
         </thead>
         <tbody>
         {{range .Body}}
-            <tr row_id="{{.ID}}" class="counter-row">
+            <tr row_id="{{.ID}}" class="indication-row">
                 <td>{{.ID}}</td>
                 <td>{{.Counter.Number}}</td>
                 <td>{{.Date}}</td>
@@ -23,7 +23,7 @@
         </tbody>
     </table>
     <hr/>
-    <form id="id_form-counter" method="post">
+    <form id="id_form-indication" method="post">
         <label for="id_date">Дата: </label>
         <input type="date" id="id_date" name="Date" autocomplete="off"><br/>
         <label for="id_data">Показание: </label>

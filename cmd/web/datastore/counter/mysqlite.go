@@ -19,7 +19,8 @@ func New(db *sql.DB) CounterStorer {
 func (a CounterStorer) GetByID(id int) (counter entities.Counter, err error) {
 	var row *sql.Row
 
-	row = a.db.QueryRow("SELECT ROWID, * FROM counters WHERE ROWID = ?", id)
+	row = a.db.QueryRow(`SELECT c.ROWID, c.type, c.number, c.verification_date, c.apartment_id 
+							    FROM counters c WHERE ROWID = ?`, id)
 
 	db, err := driver.ConnectToMySQL()
 	if err != nil {
@@ -29,7 +30,7 @@ func (a CounterStorer) GetByID(id int) (counter entities.Counter, err error) {
 
 	apartmentDB := apartment.New(db)
 
-	switch err = row.Scan(&counter.ID, &counter.Number, &counter.VerificationDate, &counter.Apartment.ID); err {
+	switch err = row.Scan(&counter.ID, &counter.Type, &counter.Number, &counter.VerificationDate, &counter.Apartment.ID); err {
 	case sql.ErrNoRows:
 		return entities.Counter{}, err
 	case nil:

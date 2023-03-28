@@ -16,7 +16,7 @@ func New(db *sql.DB) IndicationStorer {
 	return IndicationStorer{db: db}
 }
 
-func (a IndicationStorer) GetByID(id int) (indication entities.Indication, err error){
+func (a IndicationStorer) GetByID(id int) (indication entities.Indication, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM indications WHERE ROWID = ?", id)
@@ -44,9 +44,9 @@ func (a IndicationStorer) Get(id int) (indication []entities.Indication, err err
 	var rows *sql.Rows
 
 	if id != 0 {
-		rows, err = a.db.Query("SELECT ROWID, * FROM indications WHERE ROWID = ?", id)
+		rows, err = a.db.Query("SELECT ROWID, counter_id, date, data FROM indications WHERE ROWID = ?", id)
 	} else {
-		rows, err = a.db.Query("SELECT ROWID, * FROM indications")
+		rows, err = a.db.Query("SELECT ROWID, counter_id, date, data FROM indications")
 	}
 	if rows != nil {
 		defer func() {
@@ -88,4 +88,12 @@ func (a IndicationStorer) Create(indication entities.Indication) (entities.Indic
 	indication.ID = int(id)
 
 	return indication, nil
+}
+
+func (a IndicationStorer) Delete(indication entities.Indication) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM indications WHERE ROWID = ?", indication.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
