@@ -1,0 +1,39 @@
+{{define "body"}}
+    <h2>Тарифы!</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Номер счетчика</th>
+            <th>Дата</th>
+            <th>Стоимость</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="tariff-row">
+                <td>{{.ID}}</td>
+                <td>{{.Counter.Number}}</td>
+                <td>{{.SetDate}}</td>
+                <td>{{.Cost}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <hr/>
+    <form id="id_form-tariff" method="post">
+        <label for="id_date">Дата: </label>
+        <input type="date" id="id_date" name="SetDate" autocomplete="off"><br/>
+        <label for="id_cost">Стоимость: </label>
+        <input type="number" id="id_cost" name="Cost" autocomplete="off"><br/>
+        <label for="id_counter">Счетчик: </label>
+        <select id="id_counter" name="Counter">
+            {{range .Counters}}
+                <option value="{{.ID}}">{{.Number}}</option>
+            {{end}}
+        </select>
+        <input type="submit" value="Добавить тариф">
+    </form>
+{{end}}

@@ -16,7 +16,7 @@ func New(db *sql.DB) TariffStorer {
 	return TariffStorer{db: db}
 }
 
-func (a TariffStorer) GetByID(id int) (tariff entities.Tariff, err error){
+func (a TariffStorer) GetByID(id int) (tariff entities.Tariff, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM tariffs WHERE ROWID = ?", id)
@@ -88,4 +88,12 @@ func (a TariffStorer) Create(tariff entities.Tariff) (entities.Tariff, error) {
 	tariff.ID = int(id)
 
 	return tariff, nil
+}
+
+func (a TariffStorer) Delete(tariff entities.Tariff) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM tariffs WHERE ROWID = ?", tariff.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

@@ -92,7 +92,7 @@ func main() {
 	http.HandleFunc("/indication", handlerI.Handler)
 
 	tariffDB := tariff.New(db)
-	handlerTr := handlerTariff.New(tariffDB)
+	handlerTr := handlerTariff.New(tariffDB, datastoreC)
 	http.HandleFunc("/tariff", handlerTr.Handler)
 
 	contractDB := contract_rent.New(db)

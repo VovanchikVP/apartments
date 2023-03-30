@@ -121,6 +121,20 @@ $(function () {
         let data = {'indication_id': id_row}
         rest_ajax('delete', data, url);
     });
+    // Отправка формы добавления тарифов.
+    body.on('submit', '#id_form-tariff', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        let url = '/tariff';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.tariff-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/tariff';
+        let data = {'tariff_id': id_row}
+        rest_ajax('delete', data, url);
+    });
 });
 
 function rest_ajax(method, data, url) {

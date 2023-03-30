@@ -65,6 +65,7 @@ type Tariff interface {
 	Get(id int) ([]entities.Tariff, error)
 	Create(tariff entities.Tariff) (entities.Tariff, error)
 	GetByID(id int) (entities.Tariff, error)
+	Delete(tariff entities.Tariff) (bool, error)
 }
 
 type ContractRent interface {
