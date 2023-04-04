@@ -7,7 +7,7 @@ type Animal struct {
 }
 
 type Counter struct {
-	// Счетчик
+	// Счетчик ++
 	ID               int
 	Type             string
 	Number           string
@@ -16,7 +16,7 @@ type Counter struct {
 }
 
 type Indication struct {
-	// Показание
+	// Показание ++
 	ID      int
 	Counter Counter
 	Date    string
@@ -24,7 +24,7 @@ type Indication struct {
 }
 
 type Tariff struct {
-	// Тариф
+	// Тариф ++
 	ID      int
 	Counter Counter
 	SetDate string
@@ -46,7 +46,7 @@ type IDCard struct {
 }
 
 type Person struct {
-	// Человек ++
+	// Человек
 	ID         int
 	LastName   string
 	FirstName  string

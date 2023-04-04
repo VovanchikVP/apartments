@@ -45,6 +45,7 @@ type Person interface {
 	Get(id int) ([]entities.Person, error)
 	Create(person entities.Person) (entities.Person, error)
 	GetByID(id int) (entities.Person, error)
+	Delete(person entities.Person) (bool, error)
 }
 
 type Apartment interface {

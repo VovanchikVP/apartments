@@ -1,0 +1,55 @@
+{{define "body"}}
+    <h2>Люди!</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Отчество</th>
+            <th>Номер документа</th>
+            <th>Телефон</th>
+            <th>Адрес</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Body}}
+            <tr row_id="{{.ID}}" class="person-row">
+                <td>{{.ID}}</td>
+                <td>{{.FirstName}}</td>
+                <td>{{.LastName}}</td>
+                <td>{{.Patronymic}}</td>
+                <td>{{.IDCard.Number}}</td>
+                <td>{{.Phone}}</td>
+                <td>{{.Address}}</td>
+                <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    <hr/>
+    <form id="id_form-person" method="post">
+        <label for="id_first_name">Имя: </label>
+        <input type="text" id="id_first_name" name="FirstName" autocomplete="off"><br/>
+        <label for="id_last_name">Фамилия: </label>
+        <input type="text" id="id_last_name" name="LastName" autocomplete="off"><br/>
+        <label for="id_patronymic">Отчество: </label>
+        <input type="text" id="id_patronymic" name="Patronymic" autocomplete="off"><br/>
+        <label for="id_phone">Телефон: </label>
+        <input type="text" id="id_phone" name="Phone" autocomplete="off"><br/>
+        <label for="id_id_card">Счетчик: </label>
+        <select id="id_id_card" name="IDCard">
+            {{range .IDCards}}
+                <option value="{{.ID}}">{{.Number}}</option>
+            {{end}}
+        </select>
+        <label for="id_address">Адрес: </label>
+        <select id="id_address" name="Address">
+            {{range .Address}}
+                <option value="{{.ID}}">{{.City}} {{.Street}} {{.House}}-{{.Apartment}}</option>
+            {{end}}
+        </select>
+        <input type="submit" value="Добавить">
+    </form>
+{{end}}

@@ -80,7 +80,7 @@ func main() {
 	http.HandleFunc("/type_payments", handlerTP.Handler)
 
 	personDB := person.New(db)
-	handlerP := handlerPerson.New(personDB)
+	handlerP := handlerPerson.New(personDB, idCardDB, addressDB)
 	http.HandleFunc("/person", handlerP.Handler)
 
 	apartmentDB := apartment.New(db)

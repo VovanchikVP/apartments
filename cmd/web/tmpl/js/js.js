@@ -135,6 +135,20 @@ $(function () {
         let data = {'tariff_id': id_row}
         rest_ajax('delete', data, url);
     });
+    // Отправка формы добавления тарифов.
+    body.on('submit', '#id_form-person', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        let url = '/person';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.person-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/person';
+        let data = {'person_id': id_row}
+        rest_ajax('delete', data, url);
+    });
 });
 
 function rest_ajax(method, data, url) {

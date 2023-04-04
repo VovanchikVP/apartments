@@ -17,7 +17,7 @@ func New(db *sql.DB) PersonStorer {
 	return PersonStorer{db: db}
 }
 
-func (a PersonStorer) GetByID(id int) (person entities.Person, err error){
+func (a PersonStorer) GetByID(id int) (person entities.Person, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM persons WHERE ROWID = ?", id)
@@ -96,4 +96,12 @@ func (a PersonStorer) Create(person entities.Person) (entities.Person, error) {
 	person.ID = int(id)
 
 	return person, nil
+}
+
+func (a PersonStorer) Delete(person entities.Person) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM persons WHERE ROWID = ?", person.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
