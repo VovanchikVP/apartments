@@ -46,7 +46,7 @@ type IDCard struct {
 }
 
 type Person struct {
-	// Человек
+	// Человек ++
 	ID         int
 	LastName   string
 	FirstName  string
@@ -75,7 +75,7 @@ type PropertyDocuments struct {
 }
 
 type Apartment struct {
-	// Квартира
+	// Квартира ++
 	ID                int
 	Address           Address
 	CountRooms        int

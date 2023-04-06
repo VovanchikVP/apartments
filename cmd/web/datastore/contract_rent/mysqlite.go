@@ -17,7 +17,7 @@ func New(db *sql.DB) ContractRentStorer {
 	return ContractRentStorer{db: db}
 }
 
-func (a ContractRentStorer) GetByID(id int) (contract entities.ContractRent, err error){
+func (a ContractRentStorer) GetByID(id int) (contract entities.ContractRent, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM contracts_rent WHERE ROWID = ?", id)
@@ -95,4 +95,12 @@ func (a ContractRentStorer) Create(contract entities.ContractRent) (entities.Con
 	contract.ID = int(id)
 
 	return contract, nil
+}
+
+func (a ContractRentStorer) Delete(contract entities.ContractRent) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM contracts_rent WHERE ROWID = ?", contract.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

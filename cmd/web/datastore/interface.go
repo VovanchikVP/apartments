@@ -73,6 +73,7 @@ type ContractRent interface {
 	Get(id int) ([]entities.ContractRent, error)
 	Create(contract entities.ContractRent) (entities.ContractRent, error)
 	GetByID(id int) (entities.ContractRent, error)
+	Delete(contract entities.ContractRent) (bool, error)
 }
 
 type Tenant interface {
