@@ -91,7 +91,7 @@ func (a ContractHandler) create(w http.ResponseWriter, r *http.Request) {
 	contract.DateRental = r.FormValue("DateRental")
 	deposit, err := strconv.ParseFloat(r.FormValue("Deposit"), 32)
 	contract.Deposit = float32(deposit)
-	transferred_amount, err := strconv.ParseFloat(r.FormValue("Rental"), 32)
+	transferred_amount, err := strconv.ParseFloat(r.FormValue("TransferredAmount"), 32)
 	contract.Rental = float32(transferred_amount)
 	contract.PaymentsCommunal, err = strconv.ParseBool(r.FormValue("PaymentsCommunal"))
 	contract.PaymentsNetwork, err = strconv.ParseBool(r.FormValue("PaymentsNetwork"))

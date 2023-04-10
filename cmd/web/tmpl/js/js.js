@@ -149,6 +149,20 @@ $(function () {
         let data = {'person_id': id_row}
         rest_ajax('delete', data, url);
     });
+    // Отправка формы добавления тарифов.
+    body.on('submit', '#id_form-contract_rent', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        let url = '/contract_rent';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.contract_rent-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/contract_rent';
+        let data = {'contract_id': id_row}
+        rest_ajax('delete', data, url);
+    });
 });
 
 function rest_ajax(method, data, url) {

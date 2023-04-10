@@ -96,7 +96,7 @@ func main() {
 	http.HandleFunc("/tariff", handlerTr.Handler)
 
 	contractDB := contract_rent.New(db)
-	handlerCR := handlerContractRent.New(contractDB)
+	handlerCR := handlerContractRent.New(contractDB, personDB, apartmentDB)
 	http.HandleFunc("/contract_rent", handlerCR.Handler)
 
 	tenantDB := tenant.New(db)
