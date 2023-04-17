@@ -94,11 +94,30 @@ func (a ContractHandler) create(w http.ResponseWriter, r *http.Request) {
 	transferred_amount, err := strconv.ParseFloat(r.FormValue("TransferredAmount"), 32)
 	contract.Rental = float32(transferred_amount)
 	contract.PaymentsCommunal, err = strconv.ParseBool(r.FormValue("PaymentsCommunal"))
+	if err != nil {
+		contract.PaymentsCommunal = false
+	}
 	contract.PaymentsNetwork, err = strconv.ParseBool(r.FormValue("PaymentsNetwork"))
+	if err != nil {
+		contract.PaymentsNetwork = false
+	}
 	contract.PaymentsElectric, err = strconv.ParseBool(r.FormValue("PaymentsElectric"))
+	if err != nil {
+		contract.PaymentsElectric = false
+	}
 	contract.PaymentsHeating, err = strconv.ParseBool(r.FormValue("PaymentsHeating"))
+	if err != nil {
+		contract.PaymentsHeating = false
+	}
 	contract.PaymentsColdWater, err = strconv.ParseBool(r.FormValue("PaymentsColdWater"))
+	if err != nil {
+		contract.PaymentsColdWater = false
+	}
 	contract.PaymentsHotWater, err = strconv.ParseBool(r.FormValue("PaymentsHotWater"))
+	if err != nil {
+		contract.PaymentsHotWater = false
+		err = nil
+	}
 	contract.AdditionalTerms = r.FormValue("AdditionalTerms")
 	contract.FileContract = ""
 

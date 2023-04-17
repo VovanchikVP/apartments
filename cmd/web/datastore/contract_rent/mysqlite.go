@@ -48,9 +48,9 @@ func (a ContractRentStorer) Get(id int) (contract []entities.ContractRent, err e
 	var rows *sql.Rows
 
 	if id != 0 {
-		rows, err = a.db.Query("SELECT * FROM contracts_rent WHERE ROWID = ?", id)
+		rows, err = a.db.Query("SELECT ROWID, * FROM contracts_rent WHERE ROWID = ?", id)
 	} else {
-		rows, err = a.db.Query("SELECT * FROM contracts_rent")
+		rows, err = a.db.Query("SELECT ROWID, * FROM contracts_rent")
 	}
 
 	if rows != nil {
