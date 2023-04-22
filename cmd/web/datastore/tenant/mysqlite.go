@@ -17,7 +17,7 @@ func New(db *sql.DB) TenantStorer {
 	return TenantStorer{db: db}
 }
 
-func (a TenantStorer) GetByID(id int) (tenant entities.Tenant, err error){
+func (a TenantStorer) GetByID(id int) (tenant entities.Tenant, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM tenant WHERE ROWID = ?", id)
@@ -47,9 +47,9 @@ func (a TenantStorer) Get(id int) (tenant []entities.Tenant, err error) {
 	var rows *sql.Rows
 
 	if id != 0 {
-		rows, err = a.db.Query("SELECT * FROM tenant WHERE ROWID = ?", id)
+		rows, err = a.db.Query("SELECT ROWID, * FROM tenant WHERE ROWID = ?", id)
 	} else {
-		rows, err = a.db.Query("SELECT * FROM tenant")
+		rows, err = a.db.Query("SELECT ROWID, * FROM tenant")
 	}
 
 	if rows != nil {
@@ -93,4 +93,12 @@ func (a TenantStorer) Create(tenant entities.Tenant) (entities.Tenant, error) {
 	tenant.ID = int(id)
 
 	return tenant, nil
+}
+
+func (a TenantStorer) Delete(tenant entities.Tenant) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM tenant WHERE ROWID = ?", tenant.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

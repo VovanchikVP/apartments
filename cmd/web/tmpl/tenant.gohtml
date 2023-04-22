@@ -1,0 +1,53 @@
+{{define "body"}}
+<div class="container" style="max-width: 2000px">
+    <div class="row">
+        <div class="col-4">
+            <h2>Добавить жильца</h2>
+            <form id="id_form-tenant" method="post">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="id_contract_rent">Договор: </label>
+                        <select id="id_contract_rent" name="ContractRent">
+                            {{range .ContractRent}}
+                                <option value="{{.ID}}">{{.Number}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="id_person">Жилец: </label>
+                        <select id="id_person" name="Person">
+                            {{range .Person}}
+                                <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                </div>
+                <input type="submit" value="Добавить">
+            </form>
+        </div>
+        <div class="col-8">
+            <h2>Список жильцов</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Договор</th>
+                    <th>Жилец</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .Body}}
+                    <tr row_id="{{.ID}}" class="tenant-row">
+                        <td>{{.ID}}</td>
+                        <td>{{.ContractRent.Number}}</td>
+                        <td>{{.Person.FirstName}} {{.Person.LastName}}</td>
+                        <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{{end}}

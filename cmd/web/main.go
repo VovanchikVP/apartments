@@ -100,7 +100,7 @@ func main() {
 	http.HandleFunc("/contract_rent", handlerCR.Handler)
 
 	tenantDB := tenant.New(db)
-	handlerTT := handlerTenant.New(tenantDB)
+	handlerTT := handlerTenant.New(tenantDB, contractDB, personDB)
 	http.HandleFunc("/tenant", handlerTT.Handler)
 
 	paymentDB := payment.New(db)

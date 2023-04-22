@@ -80,6 +80,7 @@ type Tenant interface {
 	Get(id int) ([]entities.Tenant, error)
 	Create(tenant entities.Tenant) (entities.Tenant, error)
 	GetByID(id int) (entities.Tenant, error)
+	Delete(tenant entities.Tenant) (bool, error)
 }
 
 type Payment interface {

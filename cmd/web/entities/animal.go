@@ -84,7 +84,7 @@ type Apartment struct {
 }
 
 type ContractRent struct {
-	// Договор аренды
+	// Договор аренды ++
 	ID                    int
 	Number                string
 	Date                  string
@@ -109,12 +109,14 @@ type ContractRent struct {
 }
 
 type Tenant struct {
+	// Жилец
 	ID           int
 	ContractRent ContractRent
 	Person       Person
 }
 
 type Payment struct {
+	// Платеж
 	ID        int
 	Apartment Apartment
 	Cost      float32
