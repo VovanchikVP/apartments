@@ -92,22 +92,6 @@ func (a CounterStorer) Create(counter entities.Counter) (entities.Counter, error
 	return counter, nil
 }
 
-func (a CounterStorer) GetLastID() (int, error) {
-	var id int
-	rows, err := a.db.Query("SELECT max(ROWID) FROM counters")
-
-	defer rows.Close()
-	if err != nil {
-		return 0, err
-	}
-
-	for rows.Next() {
-		_ = rows.Scan(&id)
-	}
-
-	return id, nil
-}
-
 func (a CounterStorer) Delete(counter entities.Counter) (bool, error) {
 	_, err := a.db.Exec("DELETE FROM counters WHERE ROWID = ?", counter.ID)
 	if err != nil {

@@ -104,7 +104,7 @@ func main() {
 	http.HandleFunc("/tenant", handlerTT.Handler)
 
 	paymentDB := payment.New(db)
-	handlerPm := handlerPayment.New(paymentDB)
+	handlerPm := handlerPayment.New(paymentDB, apartmentDB, typePymentDB)
 	http.HandleFunc("/payment", handlerPm.Handler)
 
 	operationGroupsDB := operation_groups.New(db)

@@ -16,7 +16,7 @@
                     <div class="col-12">
                         <label for="id_person">Жилец: </label>
                         <select id="id_person" name="Person">
-                            {{range .Person}}
+                            {{range .Persons}}
                                 <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option>
                             {{end}}
                         </select>

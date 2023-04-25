@@ -17,7 +17,7 @@ func New(db *sql.DB) PaymentStorer {
 	return PaymentStorer{db: db}
 }
 
-func (a PaymentStorer) GetByID(id int) (payment entities.Payment, err error){
+func (a PaymentStorer) GetByID(id int) (payment entities.Payment, err error) {
 	var row *sql.Row
 
 	row = a.db.QueryRow("SELECT ROWID, * FROM payments WHERE ROWID = ?", id)
@@ -47,9 +47,9 @@ func (a PaymentStorer) Get(id int) (payment []entities.Payment, err error) {
 	var rows *sql.Rows
 
 	if id != 0 {
-		rows, err = a.db.Query("SELECT * FROM payments WHERE ROWID = ?", id)
+		rows, err = a.db.Query("SELECT ROWID, * FROM payments WHERE ROWID = ?", id)
 	} else {
-		rows, err = a.db.Query("SELECT * FROM payments")
+		rows, err = a.db.Query("SELECT ROWID, * FROM payments")
 	}
 
 	if rows != nil {
@@ -93,4 +93,12 @@ func (a PaymentStorer) Create(payment entities.Payment) (entities.Payment, error
 	payment.ID = int(id)
 
 	return payment, nil
+}
+
+func (a PaymentStorer) Delete(payment entities.Payment) (bool, error) {
+	_, err := a.db.Exec("DELETE FROM payments WHERE ROWID = ?", payment.ID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

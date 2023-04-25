@@ -109,7 +109,7 @@ type ContractRent struct {
 }
 
 type Tenant struct {
-	// Жилец
+	// Жилец ++
 	ID           int
 	ContractRent ContractRent
 	Person       Person
