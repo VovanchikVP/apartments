@@ -177,6 +177,20 @@ $(function () {
         let data = {'tenant_id': id_row}
         rest_ajax('delete', data, url);
     });
+    // Отправка формы добавления жильца.
+    body.on('submit', '#id_form-payment', function (event) {
+        event.preventDefault();
+        let data_form = $(this).serialize();
+        let url = '/payment';
+        rest_ajax('post', data_form, url);
+    });
+    // Удаление
+    body.on('click', 'tr.payment-row td.tools.remove', function () {
+        let id_row = $(this).closest('tr').attr('row_id');
+        let url = '/payment';
+        let data = {'payment_id': id_row}
+        rest_ajax('delete', data, url);
+    });
 });
 
 function rest_ajax(method, data, url) {

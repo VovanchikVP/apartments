@@ -1,0 +1,65 @@
+{{define "body"}}
+<div class="container" style="max-width: 2000px">
+    <div class="row">
+        <div class="col-4">
+            <h2>Платежи</h2>
+            <form id="id_form-payment" method="post">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="id_apartment">Квартира: </label>
+                        <select id="id_apartment" name="Apartment">
+                            {{range .Apartments}}
+                                <option value="{{.ID}}">{{.Address.City}} {{.Address.Street}} {{.Address.House}}-{{.Address.Apartment}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="id_type_payment">Тип платежа: </label>
+                        <select id="id_type_payment" name="TypePayment">
+                            {{range .TypePayment}}
+                                <option value="{{.ID}}">{{.Name}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="id_cost">Стоимость: </label>
+                        <input type="number" id="id_cost" name="Cost" autocomplete="off">
+                    </div>
+                    <div class="col-4">
+                        <label for="id_date">Дата платежа: </label>
+                        <input type="date" id="id_date" name="Date" autocomplete="off">
+                    </div>
+                </div>
+                <input type="submit" value="Добавить">
+            </form>
+        </div>
+        <div class="col-8">
+            <h2>Список платежей</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Кварира</th>
+                    <th>Тип платежа</th>
+                    <th>Дата платежа</th>
+                    <th>Стоимость</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .Body}}
+                    <tr row_id="{{.ID}}" class="payment-row">
+                        <td>{{.ID}}</td>
+                        <td>{{.Apartment.Address.City}} {{.Apartment.Address.Street}} {{.Apartment.Address.House}}-{{.Apartment.Address.Apartment}}</td>
+                        <td>{{.Type.Name}}</td>
+                        <td>{{.Date}}</td>
+                        <td>{{.Cost}}</td>
+                        <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{{end}}
