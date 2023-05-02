@@ -54,6 +54,13 @@ func (a CounterHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	respApartments, err := a.datastoreApartment.Get(0)
 	url := "cmd/web/tmpl/"
 	tmpl := template.Must(template.ParseFiles(url+"counter.gohtml", url+"index.gohtml"))

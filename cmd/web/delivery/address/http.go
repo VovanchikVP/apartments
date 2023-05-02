@@ -53,6 +53,13 @@ func (a AddressHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	url := "cmd/web/tmpl/"
 	tmpl := template.Must(template.ParseFiles(url+"address.gohtml", url+"index.gohtml"))
 	_ = tmpl.ExecuteTemplate(w, "base", struct {
@@ -89,9 +96,9 @@ func (a AddressHandler) delete(w http.ResponseWriter, r *http.Request) {
 	var address entities.Address
 	body, _ := ioutil.ReadAll(r.Body)
 	data := strings.Split(string(body), "&")
-	for i:=0; i<len(data); i++ {
+	for i := 0; i < len(data); i++ {
 		d := strings.Split(data[i], "=")
-		if d[0] == "address_id"{
+		if d[0] == "address_id" {
 			id, err := strconv.Atoi(d[1])
 			if err != nil {
 				_, _ = w.Write([]byte("Не верный формат ID"))

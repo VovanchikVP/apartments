@@ -56,6 +56,13 @@ func (a ApartmentHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	respAddress, _ := a.datastoreAddress.Get(0)
 	respPropertyDocuments, _ := a.datastorePropertyDocuments.Get(0)
 

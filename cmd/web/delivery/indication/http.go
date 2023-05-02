@@ -54,6 +54,14 @@ func (a IndicationHandler) get(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+	
 	respCounters, err := a.datastoreCounter.Get(0)
 	url := "cmd/web/tmpl/"
 	tmpl := template.Must(template.ParseFiles(url+"indication.gohtml", url+"index.gohtml"))

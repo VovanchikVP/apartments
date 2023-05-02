@@ -58,6 +58,13 @@ func (a ContractHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	rApartment, err := a.datastoreApartment.Get(0)
 	rPerson, err := a.datastorePerson.Get(0)
 
