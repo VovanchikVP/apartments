@@ -57,6 +57,14 @@ func (a PersonHandler) get(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	rIDCard, err := a.datastoreIDCARD.Get(0)
 	rAddress, err := a.datastoreAddress.Get(0)
 

@@ -53,9 +53,12 @@ func (a OperationGroupHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusCreated)
-	//_ = json.NewEncoder(w).Encode(resp)
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
 
 	url := "cmd/web/tmpl/"
 	tmpl := template.Must(template.ParseFiles(url+"operation_groups.gohtml", url+"index.gohtml"))

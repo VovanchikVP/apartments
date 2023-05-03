@@ -67,6 +67,13 @@ func (a OperationHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	respOperationGroups, err := a.datastoreOperationGroups.Get(0)
 
 	url := "cmd/web/tmpl/"

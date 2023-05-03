@@ -51,6 +51,13 @@ func (a TypePymentHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	url := "cmd/web/tmpl/"
 	tmpl := template.Must(template.ParseFiles(url+"type_payment.gohtml", url+"index.gohtml"))
 	_ = tmpl.ExecuteTemplate(w, "base", struct {

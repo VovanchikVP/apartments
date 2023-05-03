@@ -52,6 +52,13 @@ func (a PropertyHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	url := "cmd/web/tmpl/"
 	tmpl := template.Must(template.ParseFiles(url+"property_document.gohtml", url+"index.gohtml"))
 	_ = tmpl.ExecuteTemplate(w, "base", struct {
@@ -82,9 +89,9 @@ func (a PropertyHandler) delete(w http.ResponseWriter, r *http.Request) {
 	var propertyDocument entities.PropertyDocuments
 	body, _ := ioutil.ReadAll(r.Body)
 	data := strings.Split(string(body), "&")
-	for i:=0; i<len(data); i++ {
+	for i := 0; i < len(data); i++ {
 		d := strings.Split(data[i], "=")
-		if d[0] == "property_document_id"{
+		if d[0] == "property_document_id" {
 			id, err := strconv.Atoi(d[1])
 			if err != nil {
 				_, _ = w.Write([]byte("Не верный формат ID"))

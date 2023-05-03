@@ -57,6 +57,13 @@ func (a TenantHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jsonResponse := r.URL.Query().Get("json")
+	if jsonResponse == "1" {
+		body, _ := json.Marshal(resp)
+		_, _ = w.Write(body)
+		return
+	}
+
 	respContractRent, err := a.datastoreContractRent.Get(0)
 	respPerson, err := a.datastorePerson.Get(0)
 	url := "cmd/web/tmpl/"
