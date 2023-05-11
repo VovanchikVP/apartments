@@ -45,3 +45,7 @@ div.check label{
 input[type="submit"]{
     margin-top: 10px;
 }
+
+tr.hide{
+    display: none;
+}

@@ -193,6 +193,8 @@ $(function () {
     });
 });
 
+get_ajax('/contract_rent?id=0&json=1')
+
 function rest_ajax(method, data, url) {
     $.ajax({
         type: method,
@@ -208,3 +210,19 @@ function rest_ajax(method, data, url) {
     });
     return false;
 }
+
+function get_ajax(url) {
+    $.ajax({
+        type: 'get',
+        url: url,
+        success: function(data) {
+            addContractRent(JSON.parse(data))
+        },
+        error: function (jqXHR, exception) {
+            console.log(jqXHR)
+            console.log(exception)
+        }
+    });
+    return false;
+}
+

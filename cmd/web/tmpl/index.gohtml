@@ -26,6 +26,34 @@
         <a href="/tenant?id=0" style="margin-right: 20px;">Список жильцов</a>
         <a href="/payment?id=0" style="margin-right: 20px;">Список платежей</a>
         {{template "body" .}}
+        <div class="col-12">
+            <h2>Договоров аренды</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Номер</th>
+                    <th>Адрес</th>
+                    <th>Дата платежа</th>
+                    <th>Сумма плптежа</th>
+                    <th>Окончание аренды</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr class="contract_rent-row hide">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="tools remove"><i class="fa-solid fa-trash"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script src="/static/js/index.js"></script>
         <script src="/static/js/js.js"></script>
     </body>
 </html>
