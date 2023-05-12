@@ -21,3 +21,37 @@ function getAddress(data){
     let address = data['Apartment']['Address']
     return address['City'] + ' ' + address['Street'] + ' ' + address['House'] + '-' + ['Apartment']
 }
+
+function createSelect(select_id, url, func){
+    $.ajax({
+        type: 'get',
+        url: url,
+        success: function(data) {
+            data = JSON.parse(data);
+            for(let i=0; i<select_id.length; i++){
+                let obj = $("#" + select_id[i])
+                for(let j=0; j<data.length; j++){
+                    func(obj, data[j])
+                }
+            }
+        },
+        error: function (jqXHR, exception) {
+            console.log(jqXHR)
+            console.log(exception)
+        }
+    });
+}
+
+function selectPersons(obj, data){
+    obj.append($('<option>', {value: data['ID'],
+        html: data['FirstName'] + ' ' + data['LastName'] + ' ' + data['Patronymic']}))
+}
+
+function selectApartment(obj, data){
+    let address = data['Address']
+    obj.append($('<option>', {value: data['ID'],
+        html: address['City'] + ' ' + address['Street'] + ' ' + address['House'] + '-' + address['Apartment']}))
+}
+
+createSelect(['id_employer', 'id_landlord'], '/person?id=0&json=1', selectPersons)
+createSelect(['id_apartment'], '/apartment?id=0&json=1', selectApartment)

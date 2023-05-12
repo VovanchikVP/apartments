@@ -8,6 +8,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://kit.fontawesome.com/227acb4cd8.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </head>
     <body>
         <a href="/" style="margin-right: 20px;">Главная</a>
@@ -28,6 +30,7 @@
         {{template "body" .}}
         <div class="col-12">
             <h2>Договоров аренды</h2>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Добавить договор</button>
             <table>
                 <thead>
                 <tr>
@@ -55,6 +58,118 @@
         </div>
         <script src="/static/js/index.js"></script>
         <script src="/static/js/js.js"></script>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="id_form-contract_rent" method="post">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="id_contract_number">Номер договора: </label>
+                                    <input type="text" id="id_contract_number" name="Number" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_contract_date">Дата подписания: </label>
+                                    <input type="date" id="id_contract_date" name="Date" autocomplete="off">
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_employer">Наниматель: </label>
+                                    <select id="id_employer" name="EmployerID"></select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_landlord">Наймодатель: </label>
+                                    <select id="id_landlord" name="LandlordID"></select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_apartment">Квартира: </label>
+                                    <select id="id_apartment" name="ApartmentID"></select>
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_date_start_rent">Дата начала аренды: </label>
+                                    <input type="date" id="id_date_start_rent" name="DateStartRent" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_date_end_rent">Окончания аренды: </label>
+                                    <input type="date" id="id_date_end_rent" name="DateEndRent" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_date_apartment_transfer">Дата передачи квартиры: </label>
+                                    <input type="date" id="id_date_apartment_transfer" name="DateApartmentTransfer" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_rental">Арендная плата: </label>
+                                    <input type="number" id="id_rental" name="Rental" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_date_rental">Дата ежемесячного платежа: </label>
+                                    <input type="number" id="id_contract_number" name="DateRental" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_deposit">Залог: </label>
+                                    <input type="number" id="id_deposit" name="Deposit" autocomplete="off">
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_additional_terms">Доп. условия: </label>
+                                    <textarea id="id_additional_terms" form="id_form-contract_rent" name="AdditionalTerms"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_transferred_amount">Передано денег: </label>
+                                    <input type="number" id="id_transferred_amount" name="TransferredAmount" autocomplete="off">
+                                </div>
+                                <div class="col-2 check">
+                                    <label for="id_payments_communal">Оплпта комуналки: </label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="checkbox" id="id_payments_communal" name="PaymentsCommunal">
+                                </div>
+                                <div class="col-2 check">
+                                    <label for="id_payments_network">Оплпта интернета: </label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="checkbox" id="id_payments_network" name="PaymentsNetwork">
+                                </div>
+                                <div class="col-2 check">
+                                    <label for="id_payments_electric">Оплпта электричества: </label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="checkbox" id="id_payments_electric" name="PaymentsElectric">
+                                </div>
+                                <div class="col-2 check">
+                                    <label for="id_payments_heating">Оплпта отопления: </label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="checkbox" id="id_payments_heating" name="PaymentsHeating">
+                                </div>
+                                <div class="col-2 check">
+                                    <label for="id_payments_cold_water">Оплпта холодной воды: </label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="checkbox" id="id_payments_cold_water" name="PaymentsColdWater">
+                                </div>
+                                <div class="col-2 check">
+                                    <label for="id_payments_hot_water">Оплпта горячей воды: </label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="checkbox" id="id_payments_hot_water" name="PaymentsHotWater">
+                                </div>
+                            </div>
+                            <input type="submit" value="Добавить">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 {{end}}
