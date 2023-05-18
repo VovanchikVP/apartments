@@ -53,5 +53,17 @@ function selectApartment(obj, data){
         html: address['City'] + ' ' + address['Street'] + ' ' + address['House'] + '-' + address['Apartment']}))
 }
 
+function selectIDCard(obj, data){
+    obj.append($('<option>', {value: data['ID'],
+        html: data['Type'] + ' ' + data['Number']}))
+}
+
+function selectAddress(obj, data){
+    obj.append($('<option>', {value: data['ID'],
+        html: data['City'] + ' ' + data['Street'] + ' ' + data['House'] + '-' + data['Apartment']}))
+}
+
 createSelect(['id_employer', 'id_landlord'], '/person?id=0&json=1', selectPersons)
 createSelect(['id_apartment'], '/apartment?id=0&json=1', selectApartment)
+createSelect(['id_id_card'], '/id_cards?id=0&json=1', selectIDCard)
+createSelect(['id_address'], '/address?id=0&json=1', selectAddress)

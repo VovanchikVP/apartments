@@ -81,7 +81,9 @@
                                     <input type="date" id="id_contract_date" name="Date" autocomplete="off">
                                 </div>
                                 <div class="col-12">
-                                    <label for="id_employer">Наниматель: </label>
+                                    <label for="id_employer">Наниматель:
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#personModal">+</button>
+                                    </label>
                                     <select id="id_employer" name="EmployerID"></select>
                                 </div>
                                 <div class="col-12">
@@ -159,6 +161,54 @@
                                 </div>
                                 <div class="col-2">
                                     <input type="checkbox" id="id_payments_hot_water" name="PaymentsHotWater">
+                                </div>
+                            </div>
+                            <input type="submit" value="Добавить">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal add person-->
+        <div class="modal fade" id="personModal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="personModalLabel">Добавить человека</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="id_form-person" method="post">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="id_first_name">Имя: </label>
+                                    <input type="text" id="id_first_name" name="FirstName" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_last_name">Фамилия: </label>
+                                    <input type="text" id="id_last_name" name="LastName" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_patronymic">Наниматель: </label>
+                                    <input type="text" id="id_patronymic" name="Patronymic" autocomplete="off">
+                                </div>
+                                <div class="col-6">
+                                    <label for="id_phone">Телефон: </label>
+                                    <input type="text" id="id_phone" name="Phone" autocomplete="off">
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_id_card">Удостоверение личности: </label>
+                                    <select id="id_id_card" name="IDCard"></select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_address">Адрес: </label>
+                                    <select id="id_address" name="Address"></select>
                                 </div>
                             </div>
                             <input type="submit" value="Добавить">
