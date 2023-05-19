@@ -58,6 +58,7 @@ function selectIDCard(obj, data){
         html: data['Type'] + ' ' + data['Number']}))
 }
 
+
 function selectAddress(obj, data){
     obj.append($('<option>', {value: data['ID'],
         html: data['City'] + ' ' + data['Street'] + ' ' + data['House'] + '-' + data['Apartment']}))
